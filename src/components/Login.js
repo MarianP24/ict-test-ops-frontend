@@ -22,7 +22,7 @@ const Login = () => {
 
         AuthService.login(username, password)
             .then(() => {
-                navigate('/books');
+                navigate('/machines');
             })
             .catch(error => {
                 setLoading(false);

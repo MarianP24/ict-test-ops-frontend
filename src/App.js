@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import BookList from './components/BookList';
+import MachineList from './components/MachineList';
 import Login from './components/Login';
 import Register from './components/Register';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import UserManagement from './components/UserManagement';
 import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
 import './App.css';
 
 function App() {
@@ -17,15 +18,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* Standard user routes */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/books" element={
-                <>
-                  <Navbar />
-                  <BookList />
-                </>
-              } />
-            </Route>
+            {/* Landing Page */}
+            <Route path="/" element={
+              <>
+                <Navbar />
+                <LandingPage />
+              </>
+            } />
 
             {/* Admin-only routes */}
             <Route element={<AdminRoute />}>
@@ -37,8 +36,7 @@ function App() {
               } />
             </Route>
 
-            <Route path="/" element={<Navigate to="/books" replace />} />
-            <Route path="*" element={<Navigate to="/books" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </Router>
