@@ -26,6 +26,14 @@ function App() {
               </>
             } />
 
+            {/* Add this route for /machines */}
+            <Route path="/machines" element={
+              <>
+                <Navbar />
+                <MachineList />
+              </>
+            } />
+
             {/* Admin-only routes */}
             <Route element={<AdminRoute />}>
               <Route path="/admin/users" element={
