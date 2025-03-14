@@ -26,13 +26,15 @@ function App() {
               </>
             } />
 
-            {/* Add this route for /machines */}
-            <Route path="/machines" element={
-              <>
-                <Navbar />
-                <MachineList />
-              </>
-            } />
+            {/* Protected routes - require authentication */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/machines" element={
+                <>
+                  <Navbar />
+                  <MachineList />
+                </>
+              } />
+            </Route>
 
             {/* Admin-only routes */}
             <Route element={<AdminRoute />}>

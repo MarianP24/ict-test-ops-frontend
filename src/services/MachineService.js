@@ -1,7 +1,10 @@
 import axios from 'axios';
 import AuthService from './AuthService';
+import config from '../config';
 
-const API_URL = 'http://localhost:8080/machines';
+//config.api.basedUrl has the ip of the local machine is running set in .env.development
+const API_URL = `${config.api.baseUrl}/machines`;
+
 
 class MachineService {
     getAllMachines() {

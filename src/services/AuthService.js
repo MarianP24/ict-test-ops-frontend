@@ -1,12 +1,10 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/auth';
-const USERS_API_URL = 'http://localhost:8080/api/users';
+import config from '../config';
+import api from './api.service';  // Import the API client
 
 class AuthService {
     login(username, password) {
-        return axios
-            .post(`${API_URL}/signin`, { username, password })
+        return api
+            .post(`${config.api.endpoints.auth}/signin`, { username, password })
             .then(response => {
                 if (response.data.token) {
                     localStorage.setItem('user', JSON.stringify(response.data));
@@ -20,7 +18,7 @@ class AuthService {
     }
 
     register(username, email, password) {
-        return axios.post(`${API_URL}/signup`, {
+        return api.post(`${config.api.endpoints.auth}/signup`, {
             username,
             email,
             password
@@ -49,7 +47,7 @@ class AuthService {
     hasRole(roleName) {
         const user = this.getCurrentUser();
         if (!user || !user.roles) return false;
-        
+
         return user.roles.includes(roleName);
     }
 
@@ -59,22 +57,16 @@ class AuthService {
 
     // User management methods
     getAllUsers() {
-        return axios.get(USERS_API_URL, {
-            headers: this.getAuthHeader()
-        });
+        // No need for headers here as they're added by the interceptor
+        return api.get(config.api.endpoints.users);
     }
 
     updateUserRoles(userId, roles) {
-        return axios.put(`${USERS_API_URL}/${userId}/roles`, 
-            { roles },
-            { headers: this.getAuthHeader() }
-        );
+        return api.put(`${config.api.endpoints.users}/${userId}/roles`, { roles });
     }
 
     getUserDetails(userId) {
-        return axios.get(`${USERS_API_URL}/${userId}`, {
-            headers: this.getAuthHeader()
-        });
+        return api.get(`${config.api.endpoints.users}/${userId}`);
     }
 }
 

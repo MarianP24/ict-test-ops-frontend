@@ -194,7 +194,7 @@ const AddMachineForm = ({ onMachineAdded, onMachineUpdated, editMachine }) => {
                                     name="internalFactory"
                                     value={machine.internalFactory}
                                     onChange={handleInputChange}
-                                    placeholder="Enter factory number"
+                                    placeholder="Enter internal factory number"
                                     className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
                                 />
                             </div>
