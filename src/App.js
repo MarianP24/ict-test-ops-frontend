@@ -9,6 +9,7 @@ import UserManagement from './components/UserManagement';
 import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import './App.css';
+import FixtureList from "./components/FixtureList";
 
 function App() {
   return (
@@ -34,6 +35,14 @@ function App() {
                   <MachineList />
                 </>
               } />
+
+              <Route path="/fixtures" element={
+                <>
+                  <Navbar />
+                  <FixtureList />
+                </>
+              } />
+
             </Route>
 
             {/* Admin-only routes */}
