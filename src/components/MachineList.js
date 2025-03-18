@@ -40,6 +40,7 @@ const MachineList = () => {
 
     const handleMachineAdded = (newMachine) => {
         setMachines([...machines, newMachine]);
+        setShowAddForm(false); // Add this line to close the form after adding
     };
 
     const toggleAddForm = () => {
@@ -79,6 +80,7 @@ const MachineList = () => {
     const handleMachineUpdated = (updatedMachine) => {
         setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
         setEditingMachine(null);
+        setShowAddForm(false); // Add this line to close the form after updating
     };
 
     if (loading) {
@@ -186,7 +188,7 @@ const MachineList = () => {
                                     <AddMachineForm
                                         onMachineAdded={handleMachineAdded}
                                         onMachineUpdated={handleMachineUpdated}
-                                        existingMachine={editingMachine}
+                                        editMachine={editingMachine}
                                         onCancel={toggleAddForm}
                                     />
                                 </div>
