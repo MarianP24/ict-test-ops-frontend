@@ -10,10 +10,31 @@ const MachineList = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [editingMachine, setEditingMachine] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredMachines, setFilteredMachines] = useState([]);
+
 
     useEffect(() => {
         fetchMachines();
     }, []);
+
+    useEffect(() => {
+        if (!searchTerm.trim()) {
+            setFilteredMachines(machines);
+            return;
+        }
+
+        const lowercasedTerm = searchTerm.toLowerCase();
+        const filtered = machines.filter(machine =>
+            (machine.equipmentName && machine.equipmentName.toLowerCase().includes(lowercasedTerm)) ||
+            (machine.internalFactory !== undefined && String(machine.internalFactory).toLowerCase().includes(lowercasedTerm)) ||
+            (machine.serialNumber && machine.serialNumber.toLowerCase().includes(lowercasedTerm)) ||
+            (machine.equipmentType && machine.equipmentType.toLowerCase().includes(lowercasedTerm)) ||
+            (machine.hostname && machine.hostname.toLowerCase().includes(lowercasedTerm))
+        );
+
+        setFilteredMachines(filtered);
+    }, [searchTerm, machines]);
 
     const fetchMachines = () => {
         console.log('Attempting to fetch machines...');
@@ -21,6 +42,7 @@ const MachineList = () => {
             .then(response => {
                 console.log('Machines fetched successfully:', response.data);
                 setMachines(response.data);
+                setFilteredMachines(response.data); // Initialize filteredMachines with all machines
                 setLoading(false);
             })
             .catch(error => {
@@ -131,6 +153,28 @@ const MachineList = () => {
                 <div className="sm:flex sm:items-center sm:justify-between mb-8">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
+
+                        <div className="mb-4">
+                            <div className="flex">
+                                <input
+                                    type="text"
+                                    placeholder="Search"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                {searchTerm && (
+                                    <button
+                                        onClick={() => setSearchTerm('')}
+                                        className="ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
+                                    >
+                                        Clear
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+
                     </div>
                     <div className="mt-4 sm:mt-0">
                         <button
@@ -227,7 +271,7 @@ const MachineList = () => {
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                             {machines.length > 0 ? (
-                                machines.map((machine, index) => (
+                                filteredMachines.map((machine, index) => (
                                     <tr
                                         key={machine.id}
                                         className="hover:bg-gray-50 transition-colors duration-200"
