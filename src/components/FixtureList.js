@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import FixtureService from '../services/FixtureService';
-import AuthService from '../services/AuthService';
+// import AuthService from '../services/AuthService';
 import AddFixtureForm from './AddFixtureForm';
 
 const FixtureList = () => {
@@ -60,6 +60,7 @@ const FixtureList = () => {
 
     const handleFixtureAdded = (newFixture) => {
         setFixtures([...fixtures, newFixture]);
+        fetchFixtures();
         setShowAddForm(false);
     };
 
@@ -161,7 +162,7 @@ const FixtureList = () => {
     }
 
     // Get current user from auth service
-    const currentUser = AuthService.getCurrentUser();
+    // const currentUser = AuthService.getCurrentUser();
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
@@ -375,7 +376,7 @@ const FixtureList = () => {
                         </div>
 
                 <div className="mt-4 text-center text-xs text-gray-500">
-                    Showing {fixtures.length} fixtures in total
+                    Showing {filteredFixtures.length} fixtures in total
                 </div>
 
 

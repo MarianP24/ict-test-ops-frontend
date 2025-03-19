@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MachineService from '../services/MachineService';
-import AuthService from '../services/AuthService';
+// import AuthService from '../services/AuthService';
 import AddMachineForm from './AddMachineForm';
 
 const MachineList = () => {
@@ -62,7 +62,8 @@ const MachineList = () => {
 
     const handleMachineAdded = (newMachine) => {
         setMachines([...machines, newMachine]);
-        setShowAddForm(false); // Add this line to close the form after adding
+        fetchMachines()
+        setShowAddForm(false); // close the form after adding
     };
 
     const toggleAddForm = () => {
@@ -145,7 +146,7 @@ const MachineList = () => {
     }
 
     // Get current user from auth service
-    const currentUser = AuthService.getCurrentUser();
+    // const currentUser = AuthService.getCurrentUser();
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -319,7 +320,7 @@ const MachineList = () => {
                     </div>
 
                 <div className="mt-4 text-center text-xs text-gray-500">
-                    Showing {machines.length} machines in total
+                    Showing {filteredMachines.length} machines in total
                 </div>
 
             {/* Delete Confirmation Modal */}
