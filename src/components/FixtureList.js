@@ -164,10 +164,11 @@ const FixtureList = () => {
     const currentUser = AuthService.getCurrentUser();
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div className="max-w-4xl mx-auto">
-                <div className="sm:flex sm:items-center sm:justify-between mb-8">
-                    <div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
+            {/* Header section */}
+            <div className="sm:flex sm:items-center sm:justify-between mb-8">
+
+            <div>
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
 
                         <div className="mb-4">
@@ -189,9 +190,8 @@ const FixtureList = () => {
                                 )}
                             </div>
                         </div>
-
-
                     </div>
+
                     <div className="mt-4 sm:mt-0 flex flex-col space-y-2">
                         <button
                             onClick={toggleAddForm}
@@ -277,9 +277,9 @@ const FixtureList = () => {
                     </div>
                 )}
 
-                    <div className="inline-block min-w-full bg-white shadow-xl rounded-lg overflow-hidden">
-                                <table className="w-full divide-y divide-gray-200 table-auto">
-                                    <thead>
+            <div className="overflow-x-auto shadow-xl rounded-lg">
+                <table className="min-w-full divide-y divide-gray-200">
+                <thead>
                                     <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
                                         <th scope="col"
                                             className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
@@ -438,7 +438,6 @@ const FixtureList = () => {
                     </div>
                 )}
             </div>
-        </div>
     );
 };
 
