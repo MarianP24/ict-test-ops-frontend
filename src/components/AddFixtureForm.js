@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import FixtureService from '../services/FixtureService';
 
 const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
-    const initialFixtureState = {
+    const initialFixtureState = useMemo(() => ({
         fileName: '',
         programName: '',
         productName: '',
         business: ''
-    };
+    }), []);
 
     const [fixture, setFixture] = useState(initialFixtureState);
     const [submitted, setSubmitted] = useState(false);
@@ -23,7 +23,7 @@ const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
             setFixture(initialFixtureState);
             setIsEditMode(false);
         }
-    }, [editFixture]);
+    }, [editFixture, initialFixtureState]);
 
     const handleInputChange = event => {
         const { name, value } = event.target;
@@ -43,7 +43,8 @@ const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
             fileName: fixture.fileName,
             programName: fixture.programName,
             productName: fixture.productName,
-            business: fixture.business
+            business: fixture.business,
+            fixtureCounterSet: fixture.fixtureCounterSet || 0
         };
 
         if (isEditMode) {
@@ -211,7 +212,7 @@ const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
                                 <input
                                     type="number"
                                     id="counterSet"
-                                    name="counterSet"
+                                    name="fixtureCounterSet"
                                     value={fixture.fixtureCounterSet}
                                     onChange={handleInputChange}
                                     placeholder="Enter counter set"

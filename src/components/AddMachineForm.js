@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import MachineService from '../services/MachineService';
 
 const AddMachineForm = ({ onMachineAdded, onMachineUpdated, editMachine }) => {
-    const initialMachineState = {
+    const initialMachineState = useMemo(() => ({
         equipmentName: '',
         internalFactory: '',
         serialNumber: '',
         equipmentType: '',
         hostname: ''
-    };
+    }), []);
 
     const [machine, setMachine] = useState(initialMachineState);
     const [submitted, setSubmitted] = useState(false);
@@ -24,7 +24,7 @@ const AddMachineForm = ({ onMachineAdded, onMachineUpdated, editMachine }) => {
             setMachine(initialMachineState);
             setIsEditMode(false);
         }
-    }, [editMachine]);
+    }, [editMachine, initialMachineState]);
 
     const handleInputChange = event => {
         const { name, value } = event.target;
