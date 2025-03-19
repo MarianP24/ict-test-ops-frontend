@@ -110,9 +110,14 @@ const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
                     </div>
                 </div>
             ) : (
-                <form className="space-y-4">
+
+                <div>
+                    <h3 className="text-xl font-semibold leading-6 text-gray-900 mb-6 pb-2 border-b border-gray-200">
+                        {isEditMode ? 'Edit Fixture' : 'Add New Fixture'}
+                    </h3>
+
                     {error && (
-                        <div className="rounded-md bg-red-50 p-4">
+                        <div className="rounded-md bg-red-50 p-4 mb-4">
                             <div className="flex">
                                 <div className="flex-shrink-0">
                                     <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -126,89 +131,126 @@ const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
                         </div>
                     )}
 
-                    <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={fixture.name}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                            required
-                        />
+                    <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-6">
+                        <div className="sm:col-span-3">
+                            <label htmlFor="programName" className="block text-sm font-medium text-gray-700 mb-1">
+                                Program Name<span className="text-red-500">*</span>
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="text"
+                                    id="programName"
+                                    name="programName"
+                                    required
+                                    value={fixture.programName}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter program name"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="fileName" className="block text-sm font-medium text-gray-700 mb-1">
+                                File Name<span className="text-red-500">*</span>
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="text"
+                                    id="fileName"
+                                    name="fileName"
+                                    required
+                                    value={fixture.fileName}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter file name"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="productName" className="block text-sm font-medium text-gray-700 mb-1">
+                                Product Name<span className="text-red-500">*</span>
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="text"
+                                    id="productName"
+                                    name="productName"
+                                    required
+                                    value={fixture.productName}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter product name"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="business" className="block text-sm font-medium text-gray-700 mb-1">
+                                Business
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="text"
+                                    id="business"
+                                    name="business"
+                                    value={fixture.business}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter business"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="sm:col-span-3">
+                            <label htmlFor="counterSet" className="block text-sm font-medium text-gray-700 mb-1">
+                                Counter Set
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="number"
+                                    id="counterSet"
+                                    name="counterSet"
+                                    value={fixture.fixtureCounterSet}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter counter set"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label htmlFor="serialNumber" className="block text-sm font-medium text-gray-700">
-                            Serial Number <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="serialNumber"
-                            name="serialNumber"
-                            value={fixture.serialNumber}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-                            Type <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="type"
-                            name="type"
-                            value={fixture.type}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                            Status
-                        </label>
-                        <select
-                            id="status"
-                            name="status"
-                            value={fixture.status}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                        >
-                            <option value="AVAILABLE">AVAILABLE</option>
-                            <option value="IN_USE">IN USE</option>
-                            <option value="MAINTENANCE">MAINTENANCE</option>
-                            <option value="BROKEN">BROKEN</option>
-                        </select>
-                    </div>
-
-                    <div className="flex items-center justify-end space-x-3 pt-4">
-                        {isEditMode && (
+                    <div className="pt-5">
+                        <div className="flex justify-end">
                             <button
                                 type="button"
                                 onClick={resetForm}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                                className="bg-white py-2.5 px-5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200"
                             >
                                 Reset
                             </button>
-                        )}
-                        <button
-                            type="button"
-                            onClick={saveFixture}
-                            disabled={isSubmitting}
-                            className={`px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md shadow-sm hover:bg-primary-700 focus:outline-none ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                        >
-                            {isSubmitting ? 'Processing...' : isEditMode ? 'Update' : 'Save'}
-                        </button>
+                            <button
+                                type="button"
+                                onClick={saveFixture}
+                                disabled={isSubmitting}
+                                className={`ml-3 inline-flex justify-center py-2.5 px-5 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white 
+                                    ${isSubmitting ? 'bg-primary-400' : 'bg-primary-600 hover:bg-primary-700'} 
+                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200`}
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Saving...
+                                    </>
+                                ) : isEditMode ? 'Update Fixture' : 'Add Fixture'}
+                            </button>
+                        </div>
                     </div>
-                </form>
+                </div>
             )}
         </div>
     );
