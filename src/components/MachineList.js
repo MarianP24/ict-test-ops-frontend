@@ -241,9 +241,8 @@ const MachineList = () => {
                     </div>
                 )}
 
-                <div className="bg-white overflow-hidden shadow-xl rounded-lg">
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
+                <div className="inline-block min-w-full bg-white shadow-xl rounded-lg overflow-hidden">
+                    <table className="w-full divide-y divide-gray-200 table-auto">
                             <thead>
                             <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
@@ -318,7 +317,6 @@ const MachineList = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
 
                 <div className="mt-4 text-center text-xs text-gray-500">
                     Showing {machines.length} machines in total
