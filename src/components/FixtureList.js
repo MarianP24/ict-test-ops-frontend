@@ -17,8 +17,6 @@ const FixtureList = () => {
     const [sortDirection, setSortDirection] = useState('asc');
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [selectedFixture, setSelectedFixture] = useState(null);
-    const [assignmentStatus, setAssignmentStatus] = useState(null);
-
 
     useEffect(() => {
         fetchFixtures();
@@ -152,35 +150,25 @@ const FixtureList = () => {
     const handleAssignToMachine = (fixture) => {
         setSelectedFixture(fixture);
         setShowAssignModal(true);
-        setAssignmentStatus(null); // Clear any previous status
     };
 
     // function to handle the assignment
     const handleAssignFixture = (fixtureId, machineId) => {
-        setAssignmentStatus({ type: 'loading', message: 'Assigning fixture to machine...' });
-
-        FixtureService.addFixtureToMachine(fixtureId, machineId)
+        return FixtureService.addFixtureToMachine(fixtureId, machineId)
             .then(() => {
-                setAssignmentStatus({
-                    type: 'success',
-                    message: 'Fixture successfully assigned to machine!'
-                });
                 // Close the modal after a short delay to show the success message
                 setTimeout(() => {
                     setShowAssignModal(false);
-                    setAssignmentStatus(null);
                 }, 2000);
+
+                return { success: true };
             })
             .catch(error => {
                 console.error('Error assigning fixture:', error);
-                setAssignmentStatus({
-                    type: 'error',
-                    message: 'Failed to assign fixture. Please try again.'
-                });
+                // Re-throw the error so it can be caught by the modal's error handler
+                throw error;
             });
     };
-
-
 
     if (loading) {
         return (
@@ -400,9 +388,9 @@ const FixtureList = () => {
                                 className="hover:bg-gray-50 transition-colors duration-200"
                             >
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{fixture.id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{fixture.fileName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.programName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{fixture.productName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.fileName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.productName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.business}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.fixtureCounterSet}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.counter}</td>
@@ -543,17 +531,6 @@ const FixtureList = () => {
                 onClose={() => setShowAssignModal(false)}
                 onAssign={handleAssignFixture}
             />
-
-            {/* Display assignment status messages */}
-            {assignmentStatus && (
-                <div className={`fixed bottom-4 right-4 p-4 rounded shadow-lg ${
-                    assignmentStatus.type === 'success' ? 'bg-green-100 border-green-500' :
-                        assignmentStatus.type === 'error' ? 'bg-red-100 border-red-500' :
-                            'bg-blue-100 border-blue-500'
-                } border-l-4`}>
-                    {assignmentStatus.message}
-                </div>
-            )}
 
         </div>
     );
