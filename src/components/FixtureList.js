@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import FixtureService from '../services/FixtureService';
 // import AuthService from '../services/AuthService';
 import AddFixtureForm from './AddFixtureForm';
+import AssignFixtureToMachineModal from './AssignFixtureToMachineModal';
 
 const FixtureList = () => {
     const [fixtures, setFixtures] = useState([]);
@@ -14,6 +15,9 @@ const FixtureList = () => {
     const [filteredFixtures, setFilteredFixtures] = useState([]);
     const [sortField, setSortField] = useState('id'); // Default sort field
     const [sortDirection, setSortDirection] = useState('asc');
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedFixture, setSelectedFixture] = useState(null);
+    const [assignmentStatus, setAssignmentStatus] = useState(null);
 
 
     useEffect(() => {
@@ -35,7 +39,7 @@ const FixtureList = () => {
             );
         }
 
-        // Then apply sorting
+        // apply sorting
         result.sort((a, b) => {
             if (sortField === 'id') {
                 return sortDirection === 'asc' ? a.id - b.id : b.id - a.id;
@@ -59,27 +63,6 @@ const FixtureList = () => {
             setSortDirection('asc');
         }
     };
-
-    // useEffect(() => {
-    //     if (!filteredFixtures.length) return;
-    //
-    //     const sorted = [...filteredFixtures].sort((a, b) => {
-    //         if (sortField === 'id') {
-    //             // For numeric sorting of IDs
-    //             return sortDirection === 'asc'
-    //                 ? a.id - b.id
-    //                 : b.id - a.id;
-    //         } else if (sortField === 'counter') {
-    //             // For numeric sorting of counters
-    //             return sortDirection === 'asc'
-    //                 ? a.counter - b.counter
-    //                 : b.counter - a.counter;
-    //         }
-    //         return 0;
-    //     });
-    //
-    //     setFilteredFixtures(sorted);
-    // }, [sortField, sortDirection, fixtures, searchTerm]);
 
     const fetchFixtures = () => {
         console.log('Attempting to fetch fixtures...');
@@ -164,6 +147,40 @@ const FixtureList = () => {
                 setError("Failed to create maintenance report. Please try again.");
             });
     };
+
+    // handle opening the assign modal
+    const handleAssignToMachine = (fixture) => {
+        setSelectedFixture(fixture);
+        setShowAssignModal(true);
+        setAssignmentStatus(null); // Clear any previous status
+    };
+
+    // function to handle the assignment
+    const handleAssignFixture = (fixtureId, machineId) => {
+        setAssignmentStatus({ type: 'loading', message: 'Assigning fixture to machine...' });
+
+        FixtureService.addFixtureToMachine(fixtureId, machineId)
+            .then(() => {
+                setAssignmentStatus({
+                    type: 'success',
+                    message: 'Fixture successfully assigned to machine!'
+                });
+                // Close the modal after a short delay to show the success message
+                setTimeout(() => {
+                    setShowAssignModal(false);
+                    setAssignmentStatus(null);
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Error assigning fixture:', error);
+                setAssignmentStatus({
+                    type: 'error',
+                    message: 'Failed to assign fixture. Please try again.'
+                });
+            });
+    };
+
+
 
     if (loading) {
         return (
@@ -391,7 +408,7 @@ const FixtureList = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.counter}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button
-                                        className="text-primary-600 hover:text-primary-900 mr-4 transition duration-150 ease-in-out"
+                                        className="text-primary-600 hover:text-primary-900 mr-1 transition duration-150 ease-in-out"
                                         title="Edit fixture"
                                         onClick={() => handleEdit(fixture)}
                                     >
@@ -402,6 +419,7 @@ const FixtureList = () => {
                                                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                     </button>
+
                                     <button
                                         className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
                                         title="Delete fixture"
@@ -412,6 +430,27 @@ const FixtureList = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round"
                                                   strokeWidth="2"
                                                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleAssignToMachine(fixture)}
+                                        className="p-1 text-gray-600 hover:text-blue-600 focus:outline-none"
+                                        title="Assign to Machine"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            strokeWidth={2}
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                                            />
                                         </svg>
                                     </button>
                                 </td>
@@ -497,6 +536,25 @@ const FixtureList = () => {
                     </div>
                 </div>
             )}
+
+            <AssignFixtureToMachineModal
+                fixture={selectedFixture}
+                isOpen={showAssignModal}
+                onClose={() => setShowAssignModal(false)}
+                onAssign={handleAssignFixture}
+            />
+
+            {/* Display assignment status messages */}
+            {assignmentStatus && (
+                <div className={`fixed bottom-4 right-4 p-4 rounded shadow-lg ${
+                    assignmentStatus.type === 'success' ? 'bg-green-100 border-green-500' :
+                        assignmentStatus.type === 'error' ? 'bg-red-100 border-red-500' :
+                            'bg-blue-100 border-blue-500'
+                } border-l-4`}>
+                    {assignmentStatus.message}
+                </div>
+            )}
+
         </div>
     );
 };
