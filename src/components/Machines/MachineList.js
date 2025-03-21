@@ -133,7 +133,7 @@ const MachineList = () => {
     const handleMachineUpdated = (updatedMachine) => {
         setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
         setEditingMachine(null);
-        setShowAddForm(false); // Add this line to close the form after updating
+        setShowAddForm(false); // close the form after updating
     };
 
     if (loading) {
