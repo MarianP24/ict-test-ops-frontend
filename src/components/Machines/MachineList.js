@@ -1,12 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import MachineService from '../services/MachineService';
-// import AuthService from '../services/AuthService';
-import AddMachineForm from './AddMachineForm';
-import useHoverBadge from "./useHoverBadge";
-import DeleteModal from './DeleteModal';
-import MachineListErrorMessage from "./MachineListErrorMessage";
-import ModalDialogAddEditForm from "./ModalDialogAddEditForm";
-import MachineTable from './MachineTable';
+import MachineService from '../../services/MachineService';
+import {
+    AddMachineForm,
+    useHoverBadge,
+    DeleteModal,
+    MachineListErrorMessage,
+    ModalDialogAddEditForm,
+    MachineTable
+} from '.';
 
 const MachineList = () => {
     const [machines, setMachines] = useState([]);
@@ -154,9 +155,6 @@ const MachineList = () => {
         />;
     }
 
-    // Get current user from auth service
-    // const currentUser = AuthService.getCurrentUser();
-
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="max-w-4xl mx-auto">
@@ -216,7 +214,6 @@ const MachineList = () => {
                     </div>
                 </div>
 
-                {/* Modal Dialog for Add/Edit Form */}
                 <ModalDialogAddEditForm isOpen={showAddForm} onClose={toggleAddForm}>
                     <AddMachineForm
                         onMachineAdded={handleMachineAdded}

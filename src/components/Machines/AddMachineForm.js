@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import MachineService from '../services/MachineService';
+import MachineService from '../../services/MachineService';
 
 const AddMachineForm = ({ onMachineAdded, onMachineUpdated, editMachine }) => {
     const initialMachineState = useMemo(() => ({
