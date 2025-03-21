@@ -43,6 +43,11 @@ class FixtureService {
         );
     }
 
+    // Add this to FixtureService.js
+    getMachineFixtureMap() {
+        return axios.get(`${API_URL}/machineMap`, { headers: AuthService.getAuthHeader() });
+    }
+
     getCounterContent() {
         return axios.get(`${API_URL}/counter`, { headers: AuthService.getAuthHeader() });
     }
