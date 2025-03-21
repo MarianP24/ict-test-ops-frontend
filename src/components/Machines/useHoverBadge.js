@@ -16,7 +16,7 @@ const useHoverBadge = ({ rows, getCountFunction, countLabel, idKey = 'id' }) => 
             const count = getCountFunction(row[idKey]);
             if (count > 0) {
                 return (
-                    <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md transition-opacity duration-200 ease-in-out">
+                    <div className="absolute top-1 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md animate-fadeIn">
                         {count} {countLabel}
                     </div>
                 );

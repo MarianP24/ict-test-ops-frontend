@@ -48,8 +48,10 @@ const MachineTable = ({
                                 onMouseLeave={() => rowProps.onMouseLeave()}
                                 className={`${rowProps.className} hover:bg-gray-50 transition-colors duration-200`}
                             >
-                                {getBadge(machine)}
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{machine.id}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 relative">
+                                    {machine.id}
+                                    {getBadge(machine)}
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{machine.equipmentName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{machine.internalFactory}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{machine.serialNumber}</td>
@@ -94,8 +96,6 @@ const MachineTable = ({
                 )}
                 </tbody>
             </table>
-
-
         </div>
     );
 };
