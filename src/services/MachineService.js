@@ -32,8 +32,8 @@ class MachineService {
         return axios.delete(`${API_URL}/${id}`, { headers: AuthService.getAuthHeader() });
     }
 
-    getFixtureMachineMap() {
-        return axios.get(`${API_URL}/fixtureMap`, { headers: AuthService.getAuthHeader() });
+    getMachineFixtures(machineId) {
+        return axios.get(`${API_URL}/${machineId}/fixtures`, { headers: AuthService.getAuthHeader() });
     }
 }
 

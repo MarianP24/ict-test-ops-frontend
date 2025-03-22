@@ -1,17 +1,17 @@
 import React from 'react';
 
-const FixturesModal = ({ isOpen, onClose, machineId, fixtures, machineName }) => {
+const FixturesModal = ({ isOpen, onClose, fixtures, machineName }) => {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" onClick={onClose}>
             <div
-                className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+                className="relative top-20 mx-auto p-5 border w-auto max-w-2xl shadow-lg rounded-md bg-white"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="mt-3 text-center">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Fixtures for Machine: {machineName || machineId}
+                        Fixtures for Machine: {machineName}
                     </h3>
                     <div className="mt-2 px-7 py-3">
                         {fixtures && fixtures.length > 0 ? (
@@ -19,13 +19,19 @@ const FixturesModal = ({ isOpen, onClose, machineId, fixtures, machineName }) =>
                                 <table className="min-w-full">
                                     <thead>
                                     <tr className="bg-gray-100">
-                                        <th className="py-2 px-4 text-left">Fixture ID</th>
+                                        <th className="py-2 px-4 text-left">ID</th>
+                                        <th className="py-2 px-4 text-left">Name</th>
+                                        <th className="py-2 px-4 text-left">Serial Number</th>
+                                        {/* Add more columns based on your Fixture entity properties */}
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {fixtures.map((fixtureId, index) => (
-                                        <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                            <td className="py-2 px-4">{fixtureId}</td>
+                                    {fixtures.map((fixture, index) => (
+                                        <tr key={fixture.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                            <td className="py-2 px-4">{fixture.id}</td>
+                                            <td className="py-2 px-4">{fixture.name || '-'}</td>
+                                            <td className="py-2 px-4">{fixture.serialNumber || '-'}</td>
+                                            {/* Add more cells based on your Fixture entity properties */}
                                         </tr>
                                     ))}
                                     </tbody>
