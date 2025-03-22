@@ -21,10 +21,9 @@ const MachineList = () => {
     const [filteredMachines, setFilteredMachines] = useState([]);
     const [showFixturesModal, setShowFixturesModal] = useState(false);
     const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
-    const [selectedMachineId, setSelectedMachineId] = useState(null);
     const [selectedMachineName, setSelectedMachineName] = useState('');
 
-    // 3. Functions that depend on the helper functions
+    // 2. All function declarations
     const fetchMachines = useCallback(() => {
         console.log('Attempting to fetch machines...');
         MachineService.getAllMachines()
@@ -49,11 +48,73 @@ const MachineList = () => {
             });
     }, []);
 
-    // 4. useEffect hooks that use the callbacks - MOVED AFTER all function declarations
+    // 2.1 Modal control functions
+    const handleViewFixtures = useCallback((machine) => {
+        setLoading(true);
+        setSelectedMachineName(machine.equipmentName || `Machine ${machine.id}`);
+
+        MachineService.getMachineFixtures(machine.id)
+            .then(response => {
+                console.log('Fixtures fetched successfully:', response.data);
+                setSelectedMachineFixtures(response.data);
+                setShowFixturesModal(true);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching fixtures:', error);
+                setError('Failed to fetch fixtures. Please try again later.');
+                setLoading(false);
+            });
+    }, []);
+    const handleCloseFixturesModal = () => {
+        setShowFixturesModal(false);
+    };
+    const toggleAddForm = () => {
+        setEditingMachine(null);
+        setShowAddForm(!showAddForm);
+    };
+
+    // 2.2 CRUD operation functions
+    const handleMachineAdded = (newMachine) => {
+        setMachines([...machines, newMachine]);
+        fetchMachines()
+        setShowAddForm(false); // close the form after adding
+    };
+    const handleMachineUpdated = (updatedMachine) => {
+        setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
+        setEditingMachine(null);
+        setShowAddForm(false); // close the form after updating
+    };
+    const handleDelete = (id) => {
+        setDeleteConfirm(id);
+    };
+    const confirmDelete = () => {
+        if (deleteConfirm) {
+            setError(null);
+            MachineService.deleteMachine(deleteConfirm)
+                .then(() => {
+                    setMachines(machines.filter(machine => machine.id !== deleteConfirm));
+                    setDeleteConfirm(null);
+                })
+                .catch(err => {
+                    console.error("Error deleting machine:", err);
+                    setError("Failed to delete machine. Please try again.");
+                    setDeleteConfirm(null);
+                });
+        }
+    };
+    const cancelDelete = () => {
+        setDeleteConfirm(null);
+    };
+    const handleEdit = (machine) => {
+        setEditingMachine({...machine});
+        setShowAddForm(true);
+    };
+
+    // 3. useEffect hooks
     useEffect(() => {
         fetchMachines();
     }, [fetchMachines]);
-
     useEffect(() => {
         if (!searchTerm.trim()) {
             setFilteredMachines(machines);
@@ -71,80 +132,6 @@ const MachineList = () => {
 
         setFilteredMachines(filtered);
     }, [searchTerm, machines]);
-
-    // 5. Event handlers and other functions
-    const handleViewFixtures = useCallback((machine) => {
-        setLoading(true);
-        setSelectedMachineId(machine.id);
-        setSelectedMachineName(machine.equipmentName || `Machine ${machine.id}`);
-
-        MachineService.getMachineFixtures(machine.id)
-            .then(response => {
-                console.log('Fixtures fetched successfully:', response.data);
-                setSelectedMachineFixtures(response.data);
-                setShowFixturesModal(true);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching fixtures:', error);
-                setError('Failed to fetch fixtures. Please try again later.');
-                setLoading(false);
-            });
-    }, []);
-
-    const onViewFixtures = (machine) => {
-        handleViewFixtures(machine);
-    };
-
-    const handleCloseFixturesModal = () => {
-        setShowFixturesModal(false);
-    };
-
-    const handleMachineAdded = (newMachine) => {
-        setMachines([...machines, newMachine]);
-        fetchMachines()
-        setShowAddForm(false); // close the form after adding
-    };
-
-    const toggleAddForm = () => {
-        setEditingMachine(null);
-        setShowAddForm(!showAddForm);
-    };
-
-    const handleDelete = (id) => {
-        setDeleteConfirm(id);
-    };
-
-    const confirmDelete = () => {
-        if (deleteConfirm) {
-            setError(null);
-            MachineService.deleteMachine(deleteConfirm)
-                .then(() => {
-                    setMachines(machines.filter(machine => machine.id !== deleteConfirm));
-                    setDeleteConfirm(null);
-                })
-                .catch(err => {
-                    console.error("Error deleting machine:", err);
-                    setError("Failed to delete machine. Please try again.");
-                    setDeleteConfirm(null);
-                });
-        }
-    };
-
-    const cancelDelete = () => {
-        setDeleteConfirm(null);
-    };
-
-    const handleEdit = (machine) => {
-        setEditingMachine({...machine});
-        setShowAddForm(true);
-    };
-
-    const handleMachineUpdated = (updatedMachine) => {
-        setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
-        setEditingMachine(null);
-        setShowAddForm(false); // close the form after updating
-    };
 
     if (loading) {
         return (
