@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import MachineService from '../../services/MachineService';
 import {
     AddMachineForm,
-    useHoverBadge,
     DeleteModal,
     MachineListErrorMessage,
     ModalDialogAddEditForm,
@@ -29,13 +28,6 @@ const MachineList = () => {
     const getFixtureCount = (machineId) => {
         return fixtureMap[machineId] || 0;
     };
-
-    const {getRowProps, getBadge} = useHoverBadge({
-        rows: filteredMachines,
-        getCountFunction: getFixtureCount,
-        countLabel: 'fixtures',
-        idKey: 'id'
-    });
 
     useEffect(() => {
         if (!searchTerm.trim()) {
@@ -226,8 +218,6 @@ const MachineList = () => {
                 <MachineTable
                     machines={machines}
                     filteredMachines={filteredMachines}
-                    getRowProps={getRowProps}
-                    getBadge={getBadge}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />

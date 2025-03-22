@@ -3,8 +3,6 @@ import React from 'react';
 const MachineTable = ({
                           machines,
                           filteredMachines,
-                          getRowProps,
-                          getBadge,
                           handleEdit,
                           handleDelete
                       }) => {
@@ -39,18 +37,13 @@ const MachineTable = ({
                 <tbody className="bg-white divide-y divide-gray-200">
                 {machines.length > 0 ? (
                     filteredMachines.map((machine) => {
-                        // Get row props from UseHoverBadge
-                        const rowProps = getRowProps(machine);
                         return (
                             <tr
                                 key={machine.id}
-                                onMouseEnter={() => rowProps.onMouseEnter()}
-                                onMouseLeave={() => rowProps.onMouseLeave()}
-                                className={`${rowProps.className} hover:bg-gray-50 transition-colors duration-200`}
+                                className={`hover:bg-gray-50 transition-colors duration-200`}
                             >
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 relative">
                                     {machine.id}
-                                    {getBadge(machine)}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{machine.equipmentName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{machine.internalFactory}</td>
