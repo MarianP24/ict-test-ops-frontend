@@ -19,7 +19,7 @@
 .env.production.local
 
 # Specific files to ignore
-.env.development
+src/.env.development
 src/config/index.js
 
 npm-debug.log*
