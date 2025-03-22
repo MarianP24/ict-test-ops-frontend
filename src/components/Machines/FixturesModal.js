@@ -1,36 +1,51 @@
 import React from 'react';
 
-const FixturesModal = ({ isOpen, onClose, fixtures, machineName }) => {
+const FixturesModal = ({ isOpen, onClose, fixtures, machineName, maxWidth = "sm:max-w-2xl" }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" onClick={onClose}>
-            <div
-                className="relative top-20 mx-auto p-5 border w-auto max-w-2xl shadow-lg rounded-md bg-white"
-                onClick={e => e.stopPropagation()}
-            >
-                <div className="mt-3 text-center">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Fixtures for Machine: {machineName}
-                    </h3>
-                    <div className="mt-2 px-7 py-3">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                    <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+
+                {/* This element centers the modal contents. */}
+                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                <div className={`inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle ${maxWidth} sm:w-full`}>
+                    <div className="absolute top-0 right-0 pt-4 pr-4 z-10">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                        >
+                            <span className="sr-only">Close</span>
+                            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                            Fixtures for Machine: {machineName}
+                        </h3>
+
                         {fixtures && fixtures.length > 0 ? (
                             <div className="max-h-60 overflow-y-auto">
                                 <table className="min-w-full">
                                     <thead>
                                     <tr className="bg-gray-100">
-                                        <th className="py-2 px-4 text-left">ID</th>
-                                        <th className="py-2 px-4 text-left">Name</th>
-                                        <th className="py-2 px-4 text-left">Serial Number</th>
+                                        <th className="py-2 px-4 text-center">Program Name</th>
+                                        <th className="py-2 px-4 text-center">Product Name</th>
                                         {/* Add more columns based on your Fixture entity properties */}
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {fixtures.map((fixture, index) => (
                                         <tr key={fixture.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                            <td className="py-2 px-4">{fixture.id}</td>
-                                            <td className="py-2 px-4">{fixture.name || '-'}</td>
-                                            <td className="py-2 px-4">{fixture.serialNumber || '-'}</td>
+                                            <td className="py-2 px-4 text-center">{fixture.programName}</td>
+                                            <td className="py-2 px-4 text-center">{fixture.productName || '-'}</td>
                                             {/* Add more cells based on your Fixture entity properties */}
                                         </tr>
                                     ))}
@@ -42,14 +57,15 @@ const FixturesModal = ({ isOpen, onClose, fixtures, machineName }) => {
                                 No fixtures assigned to this machine.
                             </p>
                         )}
-                    </div>
-                    <div className="items-center px-4 py-3">
-                        <button
-                            onClick={onClose}
-                            className="px-4 py-2 bg-primary-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                        >
-                            Close
-                        </button>
+
+                        <div className="mt-5 sm:mt-6 text-right">
+                            <button
+                                onClick={onClose}
+                                className="px-4 py-2 bg-primary-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
