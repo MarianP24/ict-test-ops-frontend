@@ -4,7 +4,8 @@ const MachineTable = ({
                           machines,
                           filteredMachines,
                           handleEdit,
-                          handleDelete
+                          handleDelete,
+                          handleShowFixtures
                       }) => {
     return (
         <div className="inline-block min-w-full bg-white shadow-xl rounded-lg overflow-hidden">
@@ -40,7 +41,8 @@ const MachineTable = ({
                         return (
                             <tr
                                 key={machine.id}
-                                className={`hover:bg-gray-50 transition-colors duration-200`}
+                                className="hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                                onClick={() => handleShowFixtures(machine.id)}
                             >
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 relative">
                                     {machine.id}
@@ -54,7 +56,10 @@ const MachineTable = ({
                                     <button
                                         className="text-primary-600 hover:text-primary-900 mr-4 transition duration-150 ease-in-out"
                                         title="Edit machine"
-                                        onClick={() => handleEdit(machine)}
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click event
+                                            handleEdit(machine);
+                                        }}
                                     >
                                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -64,7 +69,10 @@ const MachineTable = ({
                                     <button
                                         className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
                                         title="Delete machine"
-                                        onClick={() => handleDelete(machine.id)}
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevent row click event
+                                            handleDelete(machine.id);
+                                        }}
                                     >
                                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"

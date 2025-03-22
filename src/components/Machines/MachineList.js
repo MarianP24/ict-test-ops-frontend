@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import MachineService from '../../services/MachineService';
 import {
     AddMachineForm,
     DeleteModal,
     MachineListErrorMessage,
     ModalDialogAddEditForm,
-    MachineTable
+    MachineTable,
+    FixturesModal
 } from '.';
 
 const MachineList = () => {
+    // 1. All state declarations
     const [machines, setMachines] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,16 +20,67 @@ const MachineList = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMachines, setFilteredMachines] = useState([]);
     const [fixtureMap, setFixtureMap] = useState({});
+    const [showFixturesModal, setShowFixturesModal] = useState(false);
+    const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
+    const [selectedMachineId, setSelectedMachineId] = useState(null);
+    const [selectedMachineName, setSelectedMachineName] = useState('');
 
+    // 2. Helper functions with useCallback that don't depend on other callbacks
+    const processFixtureMapData = useCallback((fixtureMapData) => {
+        const structuredMap = {};
+
+        fixtureMapData.forEach(item => {
+            if (!structuredMap[item.machineId]) {
+                structuredMap[item.machineId] = [];
+            }
+            structuredMap[item.machineId].push(item.fixtureId);
+        });
+
+        return structuredMap;
+    }, []);
+
+    // 3. Functions that depend on the helper functions
+    const fetchMachines = useCallback(() => {
+        console.log('Attempting to fetch machines...');
+        MachineService.getAllMachines()
+            .then(response => {
+                console.log('Machines fetched successfully:', response.data);
+                setMachines(response.data);
+                setFilteredMachines(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching machines:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error message:', error.message);
+                }
+                setError('Failed to fetch machines. Please try again later.');
+                setLoading(false);
+            });
+    }, []);
+
+    const fetchFixtureMap = useCallback(() => {
+        MachineService.getFixtureMachineMap()
+            .then(response => {
+                console.log('Fixture map fetched successfully:', response.data);
+                const processedMap = processFixtureMapData(response.data);
+                setFixtureMap(processedMap);
+            })
+            .catch(error => {
+                console.error('Error fetching fixture map:', error);
+            });
+    }, [processFixtureMapData]);
+
+    // 4. useEffect hooks that use the callbacks - MOVED AFTER all function declarations
     useEffect(() => {
         fetchMachines();
         fetchFixtureMap();
-    }, []);
-
-    // Set up the hover badge functionality
-    const getFixtureCount = (machineId) => {
-        return fixtureMap[machineId] || 0;
-    };
+    }, [fetchMachines, fetchFixtureMap]);
 
     useEffect(() => {
         if (!searchTerm.trim()) {
@@ -47,39 +100,19 @@ const MachineList = () => {
         setFilteredMachines(filtered);
     }, [searchTerm, machines]);
 
-    const fetchMachines = () => {
-        console.log('Attempting to fetch machines...');
-        MachineService.getAllMachines()
-            .then(response => {
-                console.log('Machines fetched successfully:', response.data);
-                setMachines(response.data);
-                setFilteredMachines(response.data); // Initialize filteredMachines with all machines
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching machines:', error);
-                if (error.response) {
-                    console.error('Response data:', error.response.data);
-                    console.error('Response status:', error.response.status);
-                } else if (error.request) {
-                    console.error('No response received:', error.request);
-                } else {
-                    console.error('Error message:', error.message);
-                }
-                setError('Failed to fetch machines. Please try again later.');
-                setLoading(false);
-            });
+    // 5. Event handlers and other functions
+    const handleShowFixtures = (machineId) => {
+        const machine = machines.find(m => m.id === machineId);
+        const fixtures = fixtureMap[machineId] || [];
+
+        setSelectedMachineId(machineId);
+        setSelectedMachineName(machine ? machine.equipmentName : '');
+        setSelectedMachineFixtures(fixtures);
+        setShowFixturesModal(true);
     };
 
-    const fetchFixtureMap = () => {
-        MachineService.getFixtureMachineMap()
-            .then(response => {
-                console.log('Fixture map fetched successfully:', response.data);
-                setFixtureMap(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching fixture map:', error);
-            });
+    const handleCloseFixturesModal = () => {
+        setShowFixturesModal(false);
     };
 
     const handleMachineAdded = (newMachine) => {
@@ -127,6 +160,7 @@ const MachineList = () => {
         setEditingMachine(null);
         setShowAddForm(false); // close the form after updating
     };
+
 
     if (loading) {
         return (
@@ -220,6 +254,15 @@ const MachineList = () => {
                     filteredMachines={filteredMachines}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
+                    handleShowFixtures={handleShowFixtures} // Pass the new handler
+                />
+
+                <FixturesModal
+                    isOpen={showFixturesModal}
+                    onClose={handleCloseFixturesModal}
+                    machineId={selectedMachineId}
+                    machineName={selectedMachineName}
+                    fixtures={selectedMachineFixtures}
                 />
 
                 <div className="mt-4 text-center text-xs text-gray-500">
