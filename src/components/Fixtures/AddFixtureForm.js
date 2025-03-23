@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import FixtureService from '../services/FixtureService';
+import FixtureService from '../../services/FixtureService';
 
 const AddFixtureForm = ({ onFixtureAdded, onFixtureUpdated, editFixture }) => {
     const initialFixtureState = useMemo(() => ({

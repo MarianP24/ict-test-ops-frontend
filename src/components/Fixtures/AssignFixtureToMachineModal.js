@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import MachineService from '../services/MachineService';
+import MachineService from '../../services/MachineService';
 
 const AssignFixtureToMachineModal = ({fixture, isOpen, onClose, onAssign}) => {
     const [machines, setMachines] = useState([]);
