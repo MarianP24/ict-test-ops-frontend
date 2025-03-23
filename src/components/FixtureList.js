@@ -335,7 +335,7 @@ const FixtureList = () => {
                     <thead>
                     <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg cursor-pointer hover:bg-primary-700"
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg cursor-pointer hover:bg-primary-700"
                             onClick={() => handleSort('id')}>
                             ID
                             {sortField === 'id' && (
@@ -345,27 +345,27 @@ const FixtureList = () => {
                             )}
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Program Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             File Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Product Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Business
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Counter Set
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-primary-700"
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-primary-700"
                             onClick={() => handleSort('counter')}>
                         Counter
                             {sortField === 'counter' && (
@@ -375,7 +375,7 @@ const FixtureList = () => {
                             )}
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
+                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
                             Actions
                         </th>
                     </tr>
@@ -385,16 +385,16 @@ const FixtureList = () => {
                         filteredFixtures.map((fixture, index) => (
                             <tr
                                 key={fixture.id}
-                                className="hover:bg-gray-50 transition-colors duration-200"
+                                className="hover:bg-gray-100 transition-colors duration-200"
                             >
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{fixture.id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.programName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.fileName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.productName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.business}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.fixtureCounterSet}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fixture.counter}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap text-center font-medium text-gray-900">{fixture.id}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.programName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fileName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.productName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.business}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fixtureCounterSet}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.counter}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <button
                                         className="text-primary-600 hover:text-primary-900 mr-1 transition duration-150 ease-in-out"
                                         title="Edit fixture"

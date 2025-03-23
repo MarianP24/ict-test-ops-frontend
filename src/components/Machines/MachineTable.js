@@ -12,25 +12,25 @@ const MachineTable = ({
             <table className="w-full divide-y divide-gray-200 table-auto">
                 <thead>
                 <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
                         ID
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                         Equipment Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                         Internal Factory
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                         Serial Number
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                         Equipment Type
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                         Hostname
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
                         Actions
                     </th>
                 </tr>
@@ -41,18 +41,18 @@ const MachineTable = ({
                         return (
                             <tr
                                 key={machine.id}
-                                className="hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                                className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                                 onClick={() => handleViewFixtures(machine)}
                             >
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 relative">
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700 relative">
                                     {machine.id}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{machine.equipmentName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{machine.internalFactory}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{machine.serialNumber}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{machine.equipmentType}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{machine.hostname}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.equipmentName}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.internalFactory}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.serialNumber}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.equipmentType}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.hostname}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <button
                                         className="text-primary-600 hover:text-primary-900 mr-4 transition duration-150 ease-in-out"
                                         title="Edit machine"
