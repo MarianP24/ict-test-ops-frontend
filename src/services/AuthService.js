@@ -1,10 +1,10 @@
-import config from '../config';
+import index from '../config';
 import api from './api.service';  // Import the API client
 
 class AuthService {
     login(username, password) {
         return api
-            .post(`${config.api.endpoints.auth}/signin`, { username, password })
+            .post(`${index.api.endpoints.auth}/signin`, { username, password })
             .then(response => {
                 if (response.data.token) {
                     localStorage.setItem('user', JSON.stringify(response.data));
@@ -18,7 +18,7 @@ class AuthService {
     }
 
     register(username, email, password) {
-        return api.post(`${config.api.endpoints.auth}/signup`, {
+        return api.post(`${index.api.endpoints.auth}/signup`, {
             username,
             email,
             password
@@ -58,15 +58,15 @@ class AuthService {
     // User management methods
     getAllUsers() {
         // No need for headers here as they're added by the interceptor
-        return api.get(config.api.endpoints.users);
+        return api.get(index.api.endpoints.users);
     }
 
     updateUserRoles(userId, roles) {
-        return api.put(`${config.api.endpoints.users}/${userId}/roles`, { roles });
+        return api.put(`${index.api.endpoints.users}/${userId}/roles`, { roles });
     }
 
     getUserDetails(userId) {
-        return api.get(`${config.api.endpoints.users}/${userId}`);
+        return api.get(`${index.api.endpoints.users}/${userId}`);
     }
 }
 

@@ -1,55 +1,41 @@
-import axios from 'axios';
-import AuthService from './AuthService';
-import config from '../config';
-
-// config.api.baseUrl has the IP of the local machine running set in .env.development
-const API_URL = `${config.api.baseUrl}/fixtures`;
+import api from './api.service';
+import index from '../config';
 
 class FixtureService {
     getAllFixtures() {
-        console.log('Fetching fixtures from:', API_URL);
-        return axios.get(`${API_URL}/list-all-fixtures`, { headers: AuthService.getAuthHeader() });
+        return api.get(`${index.api.endpoints.fixtures}/list-all-fixtures`);
     }
 
     getFixtureById(id) {
-        return axios.get(`${API_URL}/${id}`, { headers: AuthService.getAuthHeader() });
+        return api.get(`${index.api.endpoints.fixtures}/${id}`);
     }
 
     createFixture(fixture) {
-        return axios.post(API_URL, fixture, { headers: AuthService.getAuthHeader() });
+        return api.post(index.api.endpoints.fixtures, fixture);
     }
 
     updateFixture(id, fixture) {
-        return axios.put(`${API_URL}/${id}`, fixture, { headers: AuthService.getAuthHeader() });
+        return api.put(`${index.api.endpoints.fixtures}/${id}`, fixture);
     }
 
     deleteFixture(id) {
-        return axios.delete(`${API_URL}/${id}`, { headers: AuthService.getAuthHeader() });
+        return api.delete(`${index.api.endpoints.fixtures}/${id}`);
     }
 
     addFixtureToMachine(fixtureId, machineId) {
-        return axios.post(
-            `${API_URL}/${fixtureId}/machines/${machineId}`,
-            {},
-            { headers: AuthService.getAuthHeader() }
-        );
+        return api.post(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, {});
     }
 
     createMaintenanceFixtureReport() {
-        return axios.post(
-            `${API_URL}/maintenance`,
-            {},
-            { headers: AuthService.getAuthHeader() }
-        );
+        return api.post(`${index.api.endpoints.fixtures}/maintenance`, {});
     }
 
-    // Add this to FixtureService.js
     getMachineFixtureMap() {
-        return axios.get(`${API_URL}/machineMap`, { headers: AuthService.getAuthHeader() });
+        return api.get(`${index.api.endpoints.fixtures}/machineMap`);
     }
 
     getCounterContent() {
-        return axios.get(`${API_URL}/counter`, { headers: AuthService.getAuthHeader() });
+        return api.get(`${index.api.endpoints.fixtures}/counter`);
     }
 }
 
