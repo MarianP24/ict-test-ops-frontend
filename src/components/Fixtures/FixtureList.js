@@ -1,10 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import FixtureService from '../../services/FixtureService';
-import AssignFixtureToMachineModal from './AssignFixtureToMachineModal';
-import FixtureTable from './FixtureTable';
-import DeleteModal from './DeleteModal';
-import ModalDialogAddEditForm from "./ModalDialogAddEditForm";
-import LoadingTableErrorMessage from "../common/LoadingTableErrorMessage";
+
+// Fixture specific components
+import {
+    AssignFixtureToMachineModal,
+    FixtureTable
+} from '../common/FixtureComponents';
+
+// UI structure components
+import {
+    DeleteModal,
+    ModalDialogAddEditForm
+} from '../common/FixtureComponents';
+
+// Shared utility components
+import {
+    LoadingTableErrorMessage
+} from '../common/SharedComponents';
 
 const FixtureList = () => {
     // 1. All state declarations

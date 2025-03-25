@@ -1,13 +1,24 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import MachineService from '../../services/MachineService';
+
+// Machine-specific components
 import {
     AddMachineForm,
-    DeleteModal,
-    ModalDialogAddEditForm,
     MachineTable,
-    FixturesModal,
+    FixturesModal
+} from '../common/MachineComponents';
+
+// UI structure components
+import {
+    DeleteModal,
+    ModalDialogAddEditForm
+} from '../common/MachineComponents';
+
+// Shared utility components
+import {
     LoadingTableErrorMessage
-} from '.';
+} from '../common/SharedComponents';
+
 
 const MachineList = () => {
     // 1. All state declarations
