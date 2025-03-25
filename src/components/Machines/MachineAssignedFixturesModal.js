@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FixturesModal = ({ isOpen, onClose, fixtures, machineName, maxWidth = "sm:max-w-2xl" }) => {
+const MachineAssignedFixturesModal = ({ isOpen, onClose, fixtures, machineName, maxWidth = "sm:max-w-2xl" }) => {
     if (!isOpen) return null;
 
     return (
@@ -73,4 +73,4 @@ const FixturesModal = ({ isOpen, onClose, fixtures, machineName, maxWidth = "sm:
     );
 };
 
-export default FixturesModal;
+export default MachineAssignedFixturesModal;
