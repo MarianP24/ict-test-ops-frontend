@@ -4,7 +4,7 @@ import AssignFixtureToMachineModal from './AssignFixtureToMachineModal';
 import FixtureTable from './FixtureTable';
 import DeleteModal from './DeleteModal';
 import ModalDialogAddEditForm from "./ModalDialogAddEditForm";
-import FixtureListErrorMessage from "./FixtureListErrorMessage";
+import LoadingTableErrorMessage from "../common/LoadingTableErrorMessage";
 
 const FixtureList = () => {
     // 1. All state declarations
@@ -174,7 +174,7 @@ const FixtureList = () => {
     }
 
     if (error) {
-        return <FixtureListErrorMessage
+        return <LoadingTableErrorMessage
             error={error}
             onRetry={fetchFixtures}
         />;

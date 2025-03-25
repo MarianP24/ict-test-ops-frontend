@@ -3,10 +3,10 @@ import MachineService from '../../services/MachineService';
 import {
     AddMachineForm,
     DeleteModal,
-    MachineListErrorMessage,
     ModalDialogAddEditForm,
     MachineTable,
-    FixturesModal
+    FixturesModal,
+    LoadingTableErrorMessage
 } from '.';
 
 const MachineList = () => {
@@ -146,7 +146,7 @@ const MachineList = () => {
     }
 
     if (error) {
-        return <MachineListErrorMessage
+        return <LoadingTableErrorMessage
             message={error}
             onRetry={fetchMachines}
         />;
