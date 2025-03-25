@@ -5,18 +5,18 @@ import FixtureService from '../../services/FixtureService';
 import {
     AssignFixtureToMachineModal,
     FixtureTable
-} from '../common/FixtureComponents';
+} from './fixtureComponents';
 
 // UI structure components
 import {
     DeleteModal,
     ModalDialogAddEditForm
-} from '../common/FixtureComponents';
+} from './fixtureComponents';
 
 // Shared utility components
 import {
     LoadingTableErrorMessage
-} from '../common/SharedComponents';
+} from '../common/sharedComponents';
 
 const FixtureList = () => {
     // 1. All state declarations

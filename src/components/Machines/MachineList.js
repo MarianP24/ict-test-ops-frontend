@@ -6,18 +6,18 @@ import {
     AddMachineForm,
     MachineTable,
     FixturesModal
-} from '../common/MachineComponents';
+} from './machineComponents';
 
 // UI structure components
 import {
     DeleteModal,
     ModalDialogAddEditForm
-} from '../common/MachineComponents';
+} from './machineComponents';
 
 // Shared utility components
 import {
     LoadingTableErrorMessage
-} from '../common/SharedComponents';
+} from '../common/sharedComponents';
 
 
 const MachineList = () => {
