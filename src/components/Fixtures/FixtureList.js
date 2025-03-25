@@ -291,6 +291,8 @@ const FixtureList = () => {
                 isOpen={deleteConfirm !== null}
                 onDelete={confirmDelete}
                 onCancel={cancelDelete}
+                title="Delete Fixture"
+                message="Are you sure you want to delete this fixture? This action cannot be undone."
             />
 
             <AssignFixtureToMachineModal
