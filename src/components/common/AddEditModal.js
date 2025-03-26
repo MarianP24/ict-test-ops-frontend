@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ModalDialogAddEditForm = ({ isOpen, onClose, children, maxWidth = "sm:max-w-2xl" }) => {
+const AddEditModal = ({ isOpen, onClose, children, maxWidth = "sm:max-w-2xl" }) => {
     if (!isOpen) return null;
 
     return (
@@ -35,4 +35,4 @@ const ModalDialogAddEditForm = ({ isOpen, onClose, children, maxWidth = "sm:max-
     );
 };
 
-export default ModalDialogAddEditForm;
+export default AddEditModal;

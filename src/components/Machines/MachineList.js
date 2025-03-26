@@ -10,15 +10,14 @@ import {
 
 // UI structure components
 import {
-    DeleteModal,
-    ModalDialogAddEditForm
+    DeleteModal
 } from './machineComponents';
 
 // Shared utility components
 import {
-    LoadingTableErrorMessage
+    LoadingTableErrorMessage,
+    AddEditModal
 } from '../common/sharedComponents';
-
 
 const MachineList = () => {
     // 1. All state declarations
@@ -222,14 +221,14 @@ const MachineList = () => {
                     </div>
                 </div>
 
-                <ModalDialogAddEditForm isOpen={showAddForm} onClose={toggleAddForm}>
+                <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
                     <AddMachineForm
                         onMachineAdded={handleMachineAdded}
                         onMachineUpdated={handleMachineUpdated}
                         editMachine={editingMachine}
                         onCancel={toggleAddForm}
                     />
-                </ModalDialogAddEditForm>
+                </AddEditModal>
 
                 <MachineTable
                     machines={machines}

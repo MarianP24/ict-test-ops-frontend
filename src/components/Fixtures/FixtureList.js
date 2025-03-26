@@ -3,19 +3,20 @@ import FixtureService from '../../services/FixtureService';
 
 // Fixture specific components
 import {
-    AssignFixtureToMachineModal,
-    FixtureTable
+    AddFixtureForm,
+    FixtureTable,
+    AssignFixtureToMachineModal
 } from './fixtureComponents';
 
 // UI structure components
 import {
-    DeleteModal,
-    ModalDialogAddEditForm
+    DeleteModal
 } from './fixtureComponents';
 
 // Shared utility components
 import {
-    LoadingTableErrorMessage
+    LoadingTableErrorMessage,
+    AddEditModal
 } from '../common/sharedComponents';
 
 const FixtureList = () => {
@@ -264,13 +265,14 @@ const FixtureList = () => {
                 </div>
             </div>
 
-            <ModalDialogAddEditForm
-                showModal={showAddForm}
-                toggleModal={toggleAddForm}
-                onFixtureAdded={handleFixtureAdded}
-                onFixtureUpdated={handleFixtureUpdated}
-                editFixture={editingFixture}
-            />
+            <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
+                <AddFixtureForm
+                    onFixtureAdded={handleFixtureAdded}
+                    onFixtureUpdated={handleFixtureUpdated}
+                    editFixture={editingFixture}
+                    onCancel={toggleAddForm}
+                />
+            </AddEditModal>
 
             <FixtureTable
                 fixtures={fixtures}
