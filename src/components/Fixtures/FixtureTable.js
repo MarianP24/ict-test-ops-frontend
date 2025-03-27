@@ -1,5 +1,5 @@
 import React from 'react';
-import {EditIcon, DeleteIcon, AttachmentIcon, ConnectionIcon} from '../common/sharedComponents';
+import {EditButton, DeleteButton, AssignButton, ConnectionIcon } from '../common/sharedComponents';
 
 const FixtureTable = ({
                           fixtures,
@@ -77,29 +77,21 @@ const FixtureTable = ({
                             <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fixtureCounterSet}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.counter}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                <button
-                                    className="text-primary-600 hover:text-primary-900 mr-1 transition duration-150 ease-in-out"
+
+                                <EditButton
                                     title="Edit fixture"
                                     onClick={() => handleEdit(fixture)}
-                                >
-                                    <EditIcon />
-                                </button>
+                                />
 
-                                <button
-                                    className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
+                                <DeleteButton
                                     title="Delete fixture"
                                     onClick={() => handleDelete(fixture.id)}
-                                >
-                                    <DeleteIcon />
-                                </button>
+                                />
 
-                                <button
-                                    onClick={() => handleAssignToMachine(fixture)}
-                                    className="p-1 text-gray-600 hover:text-blue-600 focus:outline-none"
+                                <AssignButton
                                     title="Assign to Machine"
-                                >
-                                    <AttachmentIcon />
-                                </button>
+                                    onClick={() => handleAssignToMachine(fixture)}
+                                />
                             </td>
                         </tr>
                     ))

@@ -6,3 +6,6 @@ export { default as EditIcon } from './icons/EditIcon';
 export { default as DeleteIcon } from './icons/DeleteIcon';
 export { default as AttachmentIcon } from './icons/AttachmentIcon';
 export { default as ConnectionIcon } from './icons/ConnectionIcon';
+export { default as DeleteButton } from './buttons/DeleteButton';
+export { default as EditButton } from './buttons/EditButton';
+export { default as AssignButton } from './buttons/AssignButton';

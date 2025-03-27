@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditIcon, DeleteIcon, ConnectionIcon } from '../common/sharedComponents';
+import { EditButton, DeleteButton, ConnectionIcon } from '../common/sharedComponents';
 
 
 const MachineTable = ({
@@ -55,26 +55,16 @@ const MachineTable = ({
                                 <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.equipmentType}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{machine.hostname}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                    <button
-                                        className="text-primary-600 hover:text-primary-900 mr-4 transition duration-150 ease-in-out"
+
+                                    <EditButton
                                         title="Edit machine"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // Prevent row click event
-                                            handleEdit(machine);
-                                        }}
-                                    >
-                                        <EditIcon />
-                                    </button>
-                                    <button
-                                        className="text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
+                                        onClick={() => handleEdit(machine)}
+                                    />
+
+                                    <DeleteButton
                                         title="Delete machine"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // Prevent row click event
-                                            handleDelete(machine.id);
-                                        }}
-                                    >
-                                        <DeleteIcon />
-                                    </button>
+                                        onClick={() => handleDelete(machine.id)}
+                                    />
                                 </td>
                             </tr>
                         );
