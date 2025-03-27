@@ -1,7 +1,7 @@
 import React from 'react';
 import PlusIcon from '../icons/PlusIcon';
 
-const AddNewButton = ({ onClick, label = "Add New" }) => {
+const AddNewButton = ({ label, onClick }) => {
     return (
         <button
             onClick={onClick}
