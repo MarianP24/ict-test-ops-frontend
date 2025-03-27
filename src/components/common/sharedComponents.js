@@ -9,3 +9,4 @@ export { default as ConnectionIcon } from './icons/ConnectionIcon';
 export { default as DeleteButton } from './buttons/DeleteButton';
 export { default as EditButton } from './buttons/EditButton';
 export { default as AssignButton } from './buttons/AssignButton';
+export { default as AddNewButton } from './buttons/AddNewButton';
