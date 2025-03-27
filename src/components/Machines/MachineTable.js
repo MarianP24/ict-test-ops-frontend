@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditIcon, DeleteIcon } from '../common/sharedComponents';
+import { EditIcon, DeleteIcon, ConnectionIcon } from '../common/sharedComponents';
 
 
 const MachineTable = ({
@@ -82,10 +82,7 @@ const MachineTable = ({
                 ) : (
                     <tr>
                         <td colSpan="7" className="px-6 py-12 whitespace-nowrap text-center text-base text-gray-500">
-                            <svg className="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1"
-                                      d="M15.536 7.536a5 5 0 012.828 2.828m-2.828-2.828l-6.364 6.364m-3.536-3.536a5 5 0 002.828 2.828m-2.828-2.828L9 14"/>
-                            </svg>
+                            <ConnectionIcon />
                             <p className="mt-2">No machines found</p>
                             <p className="mt-1 text-sm">Add a new machine to get started</p>
                         </td>
