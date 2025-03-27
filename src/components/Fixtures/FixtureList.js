@@ -16,7 +16,8 @@ import {
 // Shared utility components
 import {
     LoadingTableErrorMessage,
-    AddEditModal
+    AddEditModal,
+    SearchField
 } from '../common/sharedComponents';
 
 const FixtureList = () => {
@@ -202,25 +203,12 @@ const FixtureList = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
 
-                    <div className="mb-4">
-                        <div className="flex">
-                            <input
-                                type="text"
-                                placeholder="Search"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="px-4 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            {searchTerm && (
-                                <button
-                                    onClick={() => setSearchTerm('')}
-                                    className="ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none"
-                                >
-                                    Clear
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    <SearchField
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        placeholder="Search fixtures"
+                    />
+
                 </div>
 
                 <div className="mt-4 sm:mt-0 flex flex-col space-y-2">
