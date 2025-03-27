@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import FixtureService from '../../services/FixtureService';
 
 // Fixture specific components
@@ -35,7 +35,7 @@ const FixtureList = () => {
     const [selectedFixture, setSelectedFixture] = useState(null);
 
     // 2. All function declarations
-    const fetchFixtures = () => {
+    const fetchFixtures = useCallback(() => {
         console.log('Attempting to fetch fixtures...');
         FixtureService.getAllFixtures()
             .then(response => {
@@ -57,7 +57,8 @@ const FixtureList = () => {
                 setError('Failed to fetch fixtures. Your session may have expired. Please log in again.');
                 setLoading(false);
             });
-    };
+    }, []);
+
 
     // 2.1 Modal control functions
     const handleSort = (field) => {
@@ -147,7 +148,7 @@ const FixtureList = () => {
     // 3. useEffect hooks
     useEffect(() => {
         fetchFixtures();
-    }, []);
+    }, [fetchFixtures]);
     useEffect(() => {
         let result = [...fixtures];
 
