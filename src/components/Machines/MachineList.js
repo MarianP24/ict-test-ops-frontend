@@ -53,7 +53,7 @@ const MachineList = () => {
                 } else {
                     console.error('Error message:', error.message);
                 }
-                setError('Failed to fetch machines. Please try again later.');
+                setError('Failed to fetch machines.  Your session may have expired. Please log in again.');
                 setLoading(false);
             });
     }, []);

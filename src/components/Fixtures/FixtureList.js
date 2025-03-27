@@ -54,7 +54,7 @@ const FixtureList = () => {
                 } else {
                     console.error('Error message:', error.message);
                 }
-                setError('Failed to fetch fixtures. Please try again later.');
+                setError('Failed to fetch fixtures. Your session may have expired. Please log in again.');
                 setLoading(false);
             });
     };
@@ -188,7 +188,7 @@ const FixtureList = () => {
 
     if (error) {
         return <LoadingTableErrorMessage
-            error={error}
+            message={error}
             onRetry={fetchFixtures}
         />;
     }
