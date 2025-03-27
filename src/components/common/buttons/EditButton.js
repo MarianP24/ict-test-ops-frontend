@@ -2,8 +2,8 @@ import React from 'react';
 import { EditIcon } from '../sharedComponents';
 
 const EditButton = ({
+                        title,
                         onClick,
-                        title = "Edit",
                         className = "text-primary-600 hover:text-primary-900 mr-1 transition duration-150 ease-in-out"
                     }) => {
     return (

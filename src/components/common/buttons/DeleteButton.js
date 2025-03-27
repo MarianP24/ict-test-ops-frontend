@@ -2,8 +2,8 @@ import React from 'react';
 import { DeleteIcon } from '../sharedComponents';
 
 const DeleteButton = ({
+                          title,
                           onClick,
-                          title = "Delete",
                           className = "text-red-600 hover:text-red-900 transition duration-150 ease-in-out"
                       }) => {
     return (

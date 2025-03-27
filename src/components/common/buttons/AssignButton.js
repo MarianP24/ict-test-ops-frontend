@@ -2,8 +2,8 @@ import React from 'react';
 import { AttachmentIcon } from '../sharedComponents';
 
 const AssignButton = ({
+                          title,
                           onClick,
-                          title = "Assign to Machine",
                           className = "p-1 text-gray-600 hover:text-blue-600 focus:outline-none"
                       }) => {
     return (

@@ -180,8 +180,8 @@ const MachineList = () => {
 
                     <div className="mt-4 sm:mt-0">
                         <AddNewButton
-                            onClick={toggleAddForm}
                             label="Add New Machine"
+                            onClick={toggleAddForm}
                         />
                     </div>
 
