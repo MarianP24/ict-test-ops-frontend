@@ -64,12 +64,12 @@ const FixtureTable = ({
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                 {fixtures.length > 0 ? (
-                    filteredFixtures.map((fixture) => (
+                    filteredFixtures.map((fixture, index) => (
                         <tr
                             key={fixture.id}
                             className="hover:bg-gray-100 transition-colors duration-200"
                         >
-                            <td className="px-6 py-4 whitespace-nowrap text-center font-medium text-gray-900">{fixture.id}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{index +1}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.programName}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fileName}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.productName}</td>
