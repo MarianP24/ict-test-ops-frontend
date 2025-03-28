@@ -17,14 +17,8 @@ const FixtureTable = ({
                 <thead>
                 <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
                     <th scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg cursor-pointer hover:bg-primary-700"
-                        onClick={() => handleSort('id')}>
+                        className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
                         ID
-                        {sortField === 'id' && (
-                            <span className="ml-1">
-                  {sortDirection === 'asc' ? '↑' : '↓'}
-                </span>
-                        )}
                     </th>
                     <th scope="col"
                         className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
