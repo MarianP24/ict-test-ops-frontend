@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import MachineService from '../../services/MachineService';
+import useDebounce from "../common/hooks/useDebounce";
 
 // Machine-specific components
 import {
@@ -17,8 +18,8 @@ import {
 import {
     LoadingTableErrorMessage,
     AddEditModal,
-    SearchField,
-    AddNewButton
+    AddNewButton,
+    TableFilterBar
 } from '../common/sharedComponents';
 
 const MachineList = () => {
@@ -29,7 +30,14 @@ const MachineList = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [editingMachine, setEditingMachine] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        equipmentName: '',
+        internalFactory: '',
+        serialNumber: '',
+        equipmentType: '',
+        hostname: ''
+    });
+    const debouncedFilters = useDebounce(filters, 300);
     const [filteredMachines, setFilteredMachines] = useState([]);
     const [showFixturesModal, setShowFixturesModal] = useState(false);
     const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
@@ -85,6 +93,13 @@ const MachineList = () => {
         setEditingMachine(null);
         setShowAddForm(!showAddForm);
     };
+    const filterColumns = [
+        { key: 'equipmentName', label: 'Equipment Name' },
+        { key: 'internalFactory', label: 'Internal Factory' },
+        { key: 'serialNumber', label: 'Serial Number' },
+        { key: 'equipmentType', label: 'Equipment Type' },
+        { key: 'hostname', label: 'Hostname' }
+    ];
 
     // 2.2 CRUD operation functions
     const handleMachineAdded = (newMachine) => {
@@ -127,23 +142,27 @@ const MachineList = () => {
     useEffect(() => {
         fetchMachines();
     }, [fetchMachines]);
+
+    // Add this useEffect to replace your existing filtering logic
     useEffect(() => {
-        if (!searchTerm.trim()) {
-            setFilteredMachines(machines);
-            return;
-        }
+        if (!machines.length) return;
 
-        const lowercasedTerm = searchTerm.toLowerCase();
-        const filtered = machines.filter(machine =>
-            (machine.equipmentName && machine.equipmentName.toLowerCase().includes(lowercasedTerm)) ||
-            (machine.internalFactory !== undefined && String(machine.internalFactory).toLowerCase().includes(lowercasedTerm)) ||
-            (machine.serialNumber && machine.serialNumber.toLowerCase().includes(lowercasedTerm)) ||
-            (machine.equipmentType && machine.equipmentType.toLowerCase().includes(lowercasedTerm)) ||
-            (machine.hostname && machine.hostname.toLowerCase().includes(lowercasedTerm))
-        );
+        const filteredResults = machines.filter(machine => {
+            // Only apply filters for columns that have filter values
+            return Object.entries(debouncedFilters).every(([column, filterValue]) => {
+                // Skip empty filters
+                if (!filterValue) return true;
 
-        setFilteredMachines(filtered);
-    }, [searchTerm, machines]);
+                // Safety check if the property exists
+                if (machine[column] === undefined || machine[column] === null) return false;
+
+                // Convert both to strings for consistent comparison
+                return machine[column].toString().toLowerCase().includes(filterValue.toLowerCase());
+            });
+        });
+
+        setFilteredMachines(filteredResults);
+    }, [debouncedFilters, machines]);
 
     if (loading) {
         return (
@@ -171,11 +190,12 @@ const MachineList = () => {
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
 
-                        <SearchField
-                            searchTerm={searchTerm}
-                            setSearchTerm={setSearchTerm}
-                            placeholder="Search machines"
+                        <TableFilterBar
+                            filters={filters}
+                            setFilters={setFilters}
+                            columns={filterColumns}
                         />
+
                     </div>
 
                     <div className="mt-4 sm:mt-0">
