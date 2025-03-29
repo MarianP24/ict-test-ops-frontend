@@ -62,7 +62,6 @@ const FixtureList = () => {
             });
     }, []);
 
-
     // 2.1 Modal control functions
     const handleSort = (field) => {
         if (sortField === field) {

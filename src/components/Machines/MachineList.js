@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import MachineService from '../../services/MachineService';
-import useDebounce from "../common/hooks/useDebounce";
 
 // Machine-specific components
 import {
@@ -37,7 +36,13 @@ const MachineList = () => {
         equipmentType: '',
         hostname: ''
     });
-    const debouncedFilters = useDebounce(filters, 300);
+    const [appliedFilters, setAppliedFilters] = useState({
+        equipmentName: '',
+        internalFactory: '',
+        serialNumber: '',
+        equipmentType: '',
+        hostname: ''
+    });
     const [filteredMachines, setFilteredMachines] = useState([]);
     const [showFixturesModal, setShowFixturesModal] = useState(false);
     const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
@@ -136,33 +141,28 @@ const MachineList = () => {
     const handleEdit = (machine) => {
         setEditingMachine({...machine});
         setShowAddForm(true);
-    };
+    }
 
     // 3. useEffect hooks
     useEffect(() => {
         fetchMachines();
     }, [fetchMachines]);
 
-    // Add this useEffect to replace your existing filtering logic
     useEffect(() => {
         if (!machines.length) return;
 
         const filteredResults = machines.filter(machine => {
-            // Only apply filters for columns that have filter values
-            return Object.entries(debouncedFilters).every(([column, filterValue]) => {
-                // Skip empty filters
+            return Object.entries(appliedFilters).every(([column, filterValue]) => {
                 if (!filterValue) return true;
 
-                // Safety check if the property exists
                 if (machine[column] === undefined || machine[column] === null) return false;
 
-                // Convert both to strings for consistent comparison
                 return machine[column].toString().toLowerCase().includes(filterValue.toLowerCase());
             });
         });
 
         setFilteredMachines(filteredResults);
-    }, [debouncedFilters, machines]);
+    }, [appliedFilters, machines]);
 
     if (loading) {
         return (
@@ -193,6 +193,7 @@ const MachineList = () => {
                         <TableFilterBar
                             filters={filters}
                             setFilters={setFilters}
+                            applyFilters={(newFilters) => setAppliedFilters({...newFilters})}
                             columns={filterColumns}
                         />
 
@@ -221,7 +222,7 @@ const MachineList = () => {
                     filteredMachines={filteredMachines}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
-                    handleViewFixtures={handleViewFixtures} // Pass the new handler
+                    handleViewFixtures={handleViewFixtures}
                 />
 
                 <FixturesModal

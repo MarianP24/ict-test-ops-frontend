@@ -1,40 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const TableFilterBar = ({ filters, setFilters, columns }) => {
+const TableFilterBar = ({ filters, setFilters, applyFilters, columns }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [activeFilterCount, setActiveFilterCount] = useState(0);
+    const [tempFilters, setTempFilters] = useState({...filters});
 
-    // Handle changes to any filter input
     const handleFilterChange = (column, value) => {
-        setFilters(prev => ({
+        setTempFilters(prev => ({
             ...prev,
             [column]: value
         }));
     };
 
-    // Clear all filters
+    const handleApplyFilters = () => {
+        setFilters(tempFilters);
+        if (applyFilters) {
+            applyFilters(tempFilters);
+        }
+        setIsOpen(false);
+    };
+
     const clearFilters = () => {
         const emptyFilters = Object.keys(filters).reduce((acc, key) => {
             acc[key] = '';
             return acc;
         }, {});
         setFilters(emptyFilters);
+        setTempFilters(emptyFilters);
+        if (applyFilters) {
+            applyFilters(emptyFilters);
+        }
     };
 
-    // Handle outside click to close dropdown
+    useEffect(() => {
+        if (isOpen) {
+            setTempFilters({...filters});
+        }
+    }, [isOpen, filters]);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
+                // Reset temp filters if closed without applying
+                setTempFilters({...filters});
             }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [dropdownRef]);
+    }, [dropdownRef, filters]);
 
-    // Count active filters
     useEffect(() => {
         const count = Object.values(filters).filter(value => value && value.trim() !== '').length;
         setActiveFilterCount(count);
@@ -84,7 +101,7 @@ const TableFilterBar = ({ filters, setFilters, columns }) => {
                         <div key={column.key} className="flex flex-col">
                             <label className="text-xs font-medium text-gray-700 mb-1 flex justify-between">
                                 <span>{column.label}</span>
-                                {filters[column.key] && (
+                                {tempFilters[column.key] && (
                                     <button
                                         onClick={() => handleFilterChange(column.key, '')}
                                         className="text-gray-400 hover:text-gray-600"
@@ -99,10 +116,10 @@ const TableFilterBar = ({ filters, setFilters, columns }) => {
                             <input
                                 type="text"
                                 className={`px-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-                                    filters[column.key] ? 'border-primary-500 bg-primary-50' : 'border-gray-300'
+                                    tempFilters[column.key] ? 'border-primary-500 bg-primary-50' : 'border-gray-300'
                                 }`}
                                 placeholder=""
-                                value={filters[column.key] || ''}
+                                value={tempFilters[column.key] || ''}
                                 onChange={(e) => handleFilterChange(column.key, e.target.value)}
                             />
                         </div>
@@ -111,7 +128,7 @@ const TableFilterBar = ({ filters, setFilters, columns }) => {
 
                 <div className="flex justify-end mt-4">
                     <button
-                        onClick={() => setIsOpen(false)}
+                        onClick={handleApplyFilters}
                         className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition-colors"
                     >
                         Apply Filters
