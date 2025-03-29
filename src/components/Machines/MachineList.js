@@ -109,11 +109,12 @@ const MachineList = () => {
     // 2.2 CRUD operation functions
     const handleMachineAdded = (newMachine) => {
         setMachines([...machines, newMachine]);
-        fetchMachines()
+        fetchMachines();
         setShowAddForm(false); // close the form after adding
     };
     const handleMachineUpdated = (updatedMachine) => {
         setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
+        fetchMachines();
         setEditingMachine(null);
         setShowAddForm(false); // close the form after updating
     };

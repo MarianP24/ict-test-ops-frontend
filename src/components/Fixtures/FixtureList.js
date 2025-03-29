@@ -105,6 +105,7 @@ const FixtureList = () => {
     };
     const handleFixtureUpdated = (updatedFixture) => {
         setFixtures(fixtures.map(fixture => fixture.id === updatedFixture.id ? updatedFixture : fixture));
+        fetchFixtures();
         setShowAddForm(false);
         setEditingFixture(null);
     };
