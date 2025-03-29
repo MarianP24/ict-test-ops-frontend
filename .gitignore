@@ -20,7 +20,6 @@
 
 # Specific files to ignore
 src/.env.development
-src/config/index.js
 
 npm-debug.log*
 yarn-debug.log*
