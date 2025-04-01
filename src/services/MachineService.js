@@ -29,6 +29,21 @@ class MachineService {
     getMachineFixtures(machineId) {
         return api.get(`${index.api.endpoints.machines}/${machineId}/fixtures`);
     }
+
+    getMachinesByFilters(filters) {
+        // Only include non-empty values in the request
+        const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+            if ((typeof value === 'string' && value.trim() !== '') ||
+                (typeof value === 'number')) {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+
+        return api.get(`${index.api.endpoints.machines}/filter`, {
+            params: cleanFilters
+        });
+    }
 }
 
 export default new MachineService();

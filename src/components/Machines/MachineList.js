@@ -36,13 +36,6 @@ const MachineList = () => {
         equipmentType: '',
         hostname: ''
     });
-    const [appliedFilters, setAppliedFilters] = useState({
-        equipmentName: '',
-        internalFactory: '',
-        serialNumber: '',
-        equipmentType: '',
-        hostname: ''
-    });
     const [filteredMachines, setFilteredMachines] = useState([]);
     const [showFixturesModal, setShowFixturesModal] = useState(false);
     const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
@@ -69,6 +62,29 @@ const MachineList = () => {
                     console.error('Error message:', error.message);
                 }
                 setError('Failed to fetch machines.  Your session may have expired. Please log in again.');
+                setLoading(false);
+            });
+    }, []);
+    const applyFilters = useCallback((filterValues) => {
+        setLoading(true);
+
+        MachineService.getMachinesByFilters(filterValues)
+            .then(response => {
+                console.log('Filtered machines fetched successfully:', response.data);
+                setFilteredMachines(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching filtered machines:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error message:', error.message);
+                }
+                setError('Failed to apply filters. Please try again later.');
                 setLoading(false);
             });
     }, []);
@@ -105,6 +121,7 @@ const MachineList = () => {
         { key: 'equipmentType', label: 'Equipment Type' },
         { key: 'hostname', label: 'Hostname' }
     ];
+
 
     // 2.2 CRUD operation functions
     const handleMachineAdded = (newMachine) => {
@@ -149,22 +166,6 @@ const MachineList = () => {
         fetchMachines();
     }, [fetchMachines]);
 
-    useEffect(() => {
-        if (!machines.length) return;
-
-        const filteredResults = machines.filter(machine => {
-            return Object.entries(appliedFilters).every(([column, filterValue]) => {
-                if (!filterValue) return true;
-
-                if (machine[column] === undefined || machine[column] === null) return false;
-
-                return machine[column].toString().toLowerCase().includes(filterValue.toLowerCase());
-            });
-        });
-
-        setFilteredMachines(filteredResults);
-    }, [appliedFilters, machines]);
-
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -194,7 +195,7 @@ const MachineList = () => {
                         <TableFilterBar
                             filters={filters}
                             setFilters={setFilters}
-                            applyFilters={(newFilters) => setAppliedFilters({...newFilters})}
+                            applyFilters={applyFilters}
                             columns={filterColumns}
                         />
 
