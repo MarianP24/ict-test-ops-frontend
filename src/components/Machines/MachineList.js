@@ -5,11 +5,7 @@ import MachineService from '../../services/MachineService';
 import {
     AddMachineForm,
     MachineTable,
-    FixturesModal
-} from './machineComponents';
-
-// UI structure components
-import {
+    FixturesModal,
     DeleteModal
 } from './machineComponents';
 
@@ -115,11 +111,11 @@ const MachineList = () => {
         setShowAddForm(!showAddForm);
     };
     const filterColumns = [
-        { key: 'equipmentName', label: 'Equipment Name' },
-        { key: 'internalFactory', label: 'Internal Factory' },
-        { key: 'serialNumber', label: 'Serial Number' },
-        { key: 'equipmentType', label: 'Equipment Type' },
-        { key: 'hostname', label: 'Hostname' }
+        {key: 'equipmentName', label: 'Equipment Name'},
+        {key: 'internalFactory', label: 'Internal Factory'},
+        {key: 'serialNumber', label: 'Serial Number'},
+        {key: 'equipmentType', label: 'Equipment Type'},
+        {key: 'hostname', label: 'Hostname'}
     ];
 
 

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 
-const TableFilterBar = ({ filters, setFilters, applyFilters, columns }) => {
+const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [activeFilterCount, setActiveFilterCount] = useState(0);
@@ -80,11 +80,14 @@ const TableFilterBar = ({ filters, setFilters, applyFilters, columns }) => {
                     aria-controls="filter-dropdown"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
+                        <path fillRule="evenodd"
+                              d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                              clipRule="evenodd"/>
                     </svg>
                     <span className="font-medium">Filters</span>
                     {activeFilterCount > 0 && (
-                        <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-primary-100 bg-primary-700 rounded-full">
+                        <span
+                            className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-primary-100 bg-primary-700 rounded-full">
                             {activeFilterCount}
                         </span>
                     )}
@@ -108,8 +111,8 @@ const TableFilterBar = ({ filters, setFilters, applyFilters, columns }) => {
                         ? 'opacity-100 translate-y-0'
                         : 'opacity-0 -translate-y-4 pointer-events-none'
                 }`}
-                role="dialog"
                 aria-label="Filter options"
+                role="dialog"
             >
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {columns.map(column => (
@@ -122,8 +125,10 @@ const TableFilterBar = ({ filters, setFilters, applyFilters, columns }) => {
                                         className="text-gray-400 hover:text-gray-600"
                                         aria-label={`Clear ${column.label} filter`}
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </button>
                                 )}
