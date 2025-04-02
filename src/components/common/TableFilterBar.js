@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
+import PropTypes from 'prop-types';
 
 const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +114,8 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
                 }`}
                 aria-label="Filter options"
                 role="dialog"
+                aria-modal="true"
+                aria-hidden={!isOpen}
             >
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {columns.map(column => (
@@ -158,6 +161,16 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
             </div>
         </div>
     );
+};
+
+TableFilterBar.propTypes = {
+    filters: PropTypes.object.isRequired,
+    setFilters: PropTypes.func.isRequired,
+    applyFilters: PropTypes.func.isRequired,
+    columns: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        type: PropTypes.string
+    })).isRequired
 };
 
 export default TableFilterBar;
