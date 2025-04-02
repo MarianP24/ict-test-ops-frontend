@@ -184,6 +184,25 @@ const FixtureList = () => {
     useEffect(() => {
         fetchFixtures();
     }, [fetchFixtures]);
+    useEffect(() => {
+        if (!fixtures.length) return;
+
+        const compareCounterValues = (a, b) => {
+            const aValue = a[sortField];
+            const bValue = b[sortField];
+
+            // Handle null values
+            if (aValue === null && bValue === null) return 0;
+            if (aValue === null) return sortDirection === 'asc' ? -1 : 1;
+            if (bValue === null) return sortDirection === 'asc' ? 1 : -1;
+
+            return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+        };
+
+        const sortedFixtures = [...filteredFixtures].sort(compareCounterValues);
+
+        setFilteredFixtures(sortedFixtures);
+    }, [sortField, sortDirection, filteredFixtures, fixtures.length]);
 
     if (loading) {
         return (
