@@ -5,11 +5,7 @@ import FixtureService from '../../services/FixtureService';
 import {
     AddFixtureForm,
     FixtureTable,
-    AssignFixtureToMachineModal
-} from './fixtureComponents';
-
-// UI structure components
-import {
+    AssignFixtureToMachineModal,
     DeleteModal
 } from './fixtureComponents';
 
@@ -17,9 +13,9 @@ import {
 import {
     LoadingTableErrorMessage,
     AddEditModal,
-    SearchField,
     AddNewButton,
-    MaintenanceReportAllButton
+    MaintenanceReportAllButton,
+    TableFilterBar
 } from '../common/sharedComponents';
 
 const FixtureList = () => {
@@ -30,7 +26,13 @@ const FixtureList = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [editingFixture, setEditingFixture] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        programName: '',
+        fileName: '',
+        productName: '',
+        business: '',
+        fixtureCounterSet:''
+    });
     const [filteredFixtures, setFilteredFixtures] = useState([]);
     const [sortField, setSortField] = useState('id'); // Default sort field
     const [sortDirection, setSortDirection] = useState('asc');
@@ -61,6 +63,29 @@ const FixtureList = () => {
                 setLoading(false);
             });
     }, []);
+    const applyFilters = useCallback((filterValues) => {
+        setLoading(true);
+
+        FixtureService.getFixturesByFilters(filterValues)
+            .then(response => {
+                console.log('Filtered fixtures fetched successfully:', response.data);
+                setFilteredFixtures(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching filtered fixtures:', error);
+                if (error.response) {
+                    console.error('Response data:', error.response.data);
+                    console.error('Response status:', error.response.status);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error message:', error.message);
+                }
+                setError('Failed to apply filters. Please try again later.');
+                setLoading(false);
+            });
+    }, []);
 
     // 2.1 Modal control functions
     const handleSort = (field) => {
@@ -76,6 +101,13 @@ const FixtureList = () => {
         setEditingFixture(null);
         setShowAddForm(!showAddForm);
     };
+    const filterColumns = [
+        {key: 'programName', label: 'Program Name'},
+        {key: 'fileName', label: 'File Name'},
+        {key: 'productName', label: 'Product Name'},
+        {key: 'business', label: 'Business'},
+        {key: 'fixtureCounterSet', label: 'Counter Set'}
+    ];
     const handleAssignToMachine = (fixture) => {
         setSelectedFixture(fixture);
         setShowAssignModal(true);
@@ -152,31 +184,6 @@ const FixtureList = () => {
     useEffect(() => {
         fetchFixtures();
     }, [fetchFixtures]);
-    useEffect(() => {
-        let result = [...fixtures];
-
-        // Apply search filtering if needed
-        if (searchTerm.trim()) {
-            const lowercasedTerm = searchTerm.toLowerCase();
-            result = result.filter(fixture =>
-                (fixture.fileName && fixture.fileName.toLowerCase().includes(lowercasedTerm)) ||
-                (fixture.programName && fixture.programName.toLowerCase().includes(lowercasedTerm)) ||
-                (fixture.productName && fixture.productName.toLowerCase().includes(lowercasedTerm)) ||
-                (fixture.business && fixture.business.toLowerCase().includes(lowercasedTerm))
-            );
-        }
-
-        result.sort((a, b) => {
-            if (sortField === 'id') {
-                return sortDirection === 'asc' ? a.id - b.id : b.id - a.id;
-            } else if (sortField === 'counter') {
-                return sortDirection === 'asc' ? a.counter - b.counter : b.counter - a.counter;
-            }
-            return 0;
-        });
-
-        setFilteredFixtures(result);
-    }, [fixtures, searchTerm, sortField, sortDirection]);
 
     if (loading) {
         return (
@@ -205,10 +212,11 @@ const FixtureList = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
 
-                    <SearchField
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        placeholder="Search fixtures"
+                    <TableFilterBar
+                        filters={filters}
+                        setFilters={setFilters}
+                        applyFilters={applyFilters}
+                        columns={filterColumns}
                     />
 
                 </div>

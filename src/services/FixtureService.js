@@ -37,6 +37,21 @@ class FixtureService {
     getCounterContent() {
         return api.get(`${index.api.endpoints.fixtures}/counter`);
     }
+
+    getFixturesByFilters(filters) {
+        // Only include non-empty values in the request
+        const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+            if ((typeof value === 'string' && value.trim() !== '') ||
+                (typeof value === 'number' && !isNaN(value))) {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+
+        return api.get(`${index.api.endpoints.fixtures}/filter`, {
+            params: cleanFilters
+        });
+    }
 }
 
 export default new FixtureService();
