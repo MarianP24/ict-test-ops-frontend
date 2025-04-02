@@ -169,7 +169,8 @@ TableFilterBar.propTypes = {
     applyFilters: PropTypes.func.isRequired,
     columns: PropTypes.arrayOf(PropTypes.shape({
         key: PropTypes.string.isRequired,
-        type: PropTypes.string
+        type: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired
     })).isRequired
 };
 
