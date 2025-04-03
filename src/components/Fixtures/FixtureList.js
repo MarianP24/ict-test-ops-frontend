@@ -31,7 +31,7 @@ const FixtureList = () => {
         fileName: '',
         productName: '',
         business: '',
-        fixtureCounterSet:''
+        fixtureCounterSet: ''
     });
     const [filteredFixtures, setFilteredFixtures] = useState([]);
     const [sortField, setSortField] = useState('id'); // Default sort field
@@ -226,67 +226,69 @@ const FixtureList = () => {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
             {/* Header section */}
-            <div className="sm:flex sm:items-center sm:justify-between mb-8">
+            <div className="max-w-6xl mx-auto">
+                <div className="sm:flex sm:items-center sm:justify-between mb-8">
 
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
 
-                    <TableFilterBar
-                        filters={filters}
-                        setFilters={setFilters}
-                        applyFilters={applyFilters}
-                        columns={filterColumns}
-                    />
+                        <TableFilterBar
+                            filters={filters}
+                            setFilters={setFilters}
+                            applyFilters={applyFilters}
+                            columns={filterColumns}
+                        />
 
+                    </div>
+
+                    <div className="mt-4 sm:mt-0 flex flex-col space-y-2">
+                        <AddNewButton
+                            label="Add New Fixture"
+                            onClick={toggleAddForm}
+                        />
+
+                        <MaintenanceReportAllButton
+                            label="Create Maintenance Report"
+                            onClick={handleCreateMaintenanceReport}
+                        />
+
+                    </div>
                 </div>
 
-                <div className="mt-4 sm:mt-0 flex flex-col space-y-2">
-                    <AddNewButton
-                        label="Add New Fixture"
-                        onClick={toggleAddForm}
+                <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
+                    <AddFixtureForm
+                        onFixtureAdded={handleFixtureAdded}
+                        onFixtureUpdated={handleFixtureUpdated}
+                        editFixture={editingFixture}
+                        onCancel={toggleAddForm}
                     />
+                </AddEditModal>
 
-                    <MaintenanceReportAllButton
-                        label="Create Maintenance Report"
-                        onClick={handleCreateMaintenanceReport}
-                    />
-
-                </div>
-            </div>
-
-            <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
-                <AddFixtureForm
-                    onFixtureAdded={handleFixtureAdded}
-                    onFixtureUpdated={handleFixtureUpdated}
-                    editFixture={editingFixture}
-                    onCancel={toggleAddForm}
+                <FixtureTable
+                    filteredFixtures={filteredFixtures}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    handleSort={handleSort}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                    handleAssignToMachine={handleAssignToMachine}
                 />
-            </AddEditModal>
 
-            <FixtureTable
-                filteredFixtures={filteredFixtures}
-                sortField={sortField}
-                sortDirection={sortDirection}
-                handleSort={handleSort}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-                handleAssignToMachine={handleAssignToMachine}
-            />
+                <DeleteModal
+                    isOpen={deleteConfirm !== null}
+                    onDelete={confirmDelete}
+                    onCancel={cancelDelete}
+                    title="Delete Fixture"
+                    message="Are you sure you want to delete this fixture? This action cannot be undone."
+                />
 
-            <DeleteModal
-                isOpen={deleteConfirm !== null}
-                onDelete={confirmDelete}
-                onCancel={cancelDelete}
-                title="Delete Fixture"
-                message="Are you sure you want to delete this fixture? This action cannot be undone."
-            />
-
-            <AssignFixtureToMachineModal
-                fixture={selectedFixture}
-                isOpen={showAssignModal}
-                onClose={() => setShowAssignModal(false)}
-                onAssign={handleAssignFixture}
-            />
+                <AssignFixtureToMachineModal
+                    fixture={selectedFixture}
+                    isOpen={showAssignModal}
+                    onClose={() => setShowAssignModal(false)}
+                    onAssign={handleAssignFixture}
+                />
+            </div>
         </div>
     );
 };

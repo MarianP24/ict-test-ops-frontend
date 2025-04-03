@@ -25,37 +25,37 @@ const FixtureTable = ({
 
 
     return (
-        <div className="space-y-6">
-            <div className="overflow-x-auto shadow-xl rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
+        <div className="space-y-4 w-full">
+            <div className="w-full bg-white shadow-xl rounded-lg overflow-auto">
+                <table className="divide-y divide-gray-200 w-full">
                     <thead>
                     <tr className="bg-gradient-to-r from-primary-600 to-primary-800">
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
                             ID
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Program Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             File Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Product Name
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Business
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Counter Set
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-primary-700"
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-primary-700"
                             onClick={() => handleSort('counter')}>
                             Counter
                             {sortField === 'counter' && (
@@ -65,7 +65,7 @@ const FixtureTable = ({
                             )}
                         </th>
                         <th scope="col"
-                            className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
                             Actions
                         </th>
                     </tr>
@@ -77,14 +77,14 @@ const FixtureTable = ({
                                 key={fixture.id}
                                 className="hover:bg-gray-100 transition-colors duration-200"
                             >
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{indexOfFirstItem + index + 1}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.programName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fileName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.productName}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.business}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.fixtureCounterSet}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-gray-700">{fixture.counter}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                <td className="py-2 text-sm text-center text-gray-700">{indexOfFirstItem + index + 1}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.programName}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.fileName}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.productName}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.business}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.fixtureCounterSet}</td>
+                                <td className="py-2 text-sm text-center text-gray-700">{fixture.counter}</td>
+                                <td className="py-2 text-center text-sm font-medium">
 
                                     <EditButton
                                         title="Edit fixture"

@@ -182,9 +182,11 @@ const MachineList = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
+            {/* Header section */}
             <div className="max-w-4xl mx-auto">
                 <div className="sm:flex sm:items-center sm:justify-between mb-8">
+
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
 
