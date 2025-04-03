@@ -264,7 +264,6 @@ const FixtureList = () => {
             </AddEditModal>
 
             <FixtureTable
-                fixtures={fixtures}
                 filteredFixtures={filteredFixtures}
                 sortField={sortField}
                 sortDirection={sortDirection}
@@ -273,10 +272,6 @@ const FixtureList = () => {
                 handleDelete={handleDelete}
                 handleAssignToMachine={handleAssignToMachine}
             />
-
-            <div className="mt-4 text-center text-xs text-gray-500">
-                Showing {filteredFixtures.length} fixtures in total
-            </div>
 
             <DeleteModal
                 isOpen={deleteConfirm !== null}

@@ -39,7 +39,15 @@ class FixtureService {
     }
 
     getFixturesByFilters(filters) {
-        // Only include non-empty values in the request
+        // Check if all filter values are empty
+        const allEmpty = Object.values(filters).every(value =>
+            typeof value === 'string' ? value.trim() === '' : false
+        );
+
+        if (allEmpty) {
+            return this.getAllFixtures();
+        }
+
         const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
             if ((typeof value === 'string' && value.trim() !== '') ||
                 (typeof value === 'number' && !isNaN(value))) {

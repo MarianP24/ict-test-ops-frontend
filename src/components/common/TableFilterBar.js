@@ -47,7 +47,6 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
         }
     }, [filters, setFilters, applyFilters]);
 
-    // Outside click handler
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -58,7 +57,6 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [dropdownRef]);
-
     useEffect(() => {
         const count = Object.values(filters).filter(value => {
             if (value === null || value === undefined) return false;
