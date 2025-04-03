@@ -2,35 +2,35 @@ import api from './api.service';
 import index from '../config';
 
 class MachineService {
-    getAllMachines() {
-        return api.get(`${index.api.endpoints.machines}/all`);
+    getAllMachines(signal) {
+        return api.get(`${index.api.endpoints.machines}/all`, { signal });
     }
 
-    getAllMachinesDTO() {
-        return api.get(`${index.api.endpoints.machines}/all-dto`);
+    getAllMachinesDTO(signal) {
+        return api.get(`${index.api.endpoints.machines}/all-dto`, { signal });
     }
 
-    getMachineById(id) {
-        return api.get(`${index.api.endpoints.machines}/${id}`);
+    getMachineById(id, signal) {
+        return api.get(`${index.api.endpoints.machines}/${id}`, { signal });
     }
 
-    createMachine(machine) {
-        return api.post(index.api.endpoints.machines, machine);
+    createMachine(machine, signal) {
+        return api.post(index.api.endpoints.machines, machine, { signal });
     }
 
-    updateMachine(id, machine) {
-        return api.put(`${index.api.endpoints.machines}/${id}`, machine);
+    updateMachine(id, machine, signal) {
+        return api.put(`${index.api.endpoints.machines}/${id}`, machine, { signal });
     }
 
-    deleteMachine(id) {
-        return api.delete(`${index.api.endpoints.machines}/${id}`);
+    deleteMachine(id, signal) {
+        return api.delete(`${index.api.endpoints.machines}/${id}`, { signal });
     }
 
-    getMachineFixtures(machineId) {
-        return api.get(`${index.api.endpoints.machines}/${machineId}/fixtures`);
+    getMachineFixtures(machineId, signal) {
+        return api.get(`${index.api.endpoints.machines}/${machineId}/fixtures`, { signal });
     }
 
-    getMachinesByFilters(filters) {
+    getMachinesByFilters(filters, signal) {
         // Only include non-empty values in the request
         const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
             if ((typeof value === 'string' && value.trim() !== '') ||
@@ -41,7 +41,8 @@ class MachineService {
         }, {});
 
         return api.get(`${index.api.endpoints.machines}/filter`, {
-            params: cleanFilters
+            params: cleanFilters,
+            signal
         });
     }
 }

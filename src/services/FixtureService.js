@@ -2,50 +2,50 @@ import api from './api.service';
 import index from '../config';
 
 class FixtureService {
-    getAllFixtures() {
-        return api.get(`${index.api.endpoints.fixtures}/list-all-fixtures`);
+    getAllFixtures(signal) {
+        return api.get(`${index.api.endpoints.fixtures}/list-all-fixtures`, { signal });
     }
 
-    getFixtureById(id) {
-        return api.get(`${index.api.endpoints.fixtures}/${id}`);
+    getFixtureById(id, signal) {
+        return api.get(`${index.api.endpoints.fixtures}/${id}`, { signal });
     }
 
-    createFixture(fixture) {
-        return api.post(index.api.endpoints.fixtures, fixture);
+    createFixture(fixture, signal) {
+        return api.post(index.api.endpoints.fixtures, fixture, { signal });
     }
 
-    updateFixture(id, fixture) {
-        return api.put(`${index.api.endpoints.fixtures}/${id}`, fixture);
+    updateFixture(id, fixture, signal) {
+        return api.put(`${index.api.endpoints.fixtures}/${id}`, fixture, { signal });
     }
 
-    deleteFixture(id) {
-        return api.delete(`${index.api.endpoints.fixtures}/${id}`);
+    deleteFixture(id, signal) {
+        return api.delete(`${index.api.endpoints.fixtures}/${id}`, { signal });
     }
 
-    addFixtureToMachine(fixtureId, machineId) {
-        return api.post(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, {});
+    addFixtureToMachine(fixtureId, machineId, signal) {
+        return api.post(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, {}, { signal });
     }
 
-    createMaintenanceFixtureReport() {
-        return api.post(`${index.api.endpoints.fixtures}/maintenance`, {});
+    createMaintenanceFixtureReport(signal) {
+        return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, { signal });
     }
 
-    getMachineFixtureMap() {
-        return api.get(`${index.api.endpoints.fixtures}/machineMap`);
+    getMachineFixtureMap(signal) {
+        return api.get(`${index.api.endpoints.fixtures}/machineMap`, { signal });
     }
 
-    getCounterContent() {
-        return api.get(`${index.api.endpoints.fixtures}/counter`);
+    getCounterContent(signal) {
+        return api.get(`${index.api.endpoints.fixtures}/counter`, { signal });
     }
 
-    getFixturesByFilters(filters) {
+    getFixturesByFilters(filters, signal) {
         // Check if all filter values are empty
         const allEmpty = Object.values(filters).every(value =>
             typeof value === 'string' ? value.trim() === '' : false
         );
 
         if (allEmpty) {
-            return this.getAllFixtures();
+            return this.getAllFixtures(signal);
         }
 
         const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
@@ -57,7 +57,8 @@ class FixtureService {
         }, {});
 
         return api.get(`${index.api.endpoints.fixtures}/filter`, {
-            params: cleanFilters
+            params: cleanFilters,
+            signal
         });
     }
 }

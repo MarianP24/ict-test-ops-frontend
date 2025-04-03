@@ -42,14 +42,21 @@ const FixtureList = () => {
     // 2. All function declarations
     const fetchFixtures = useCallback(() => {
         console.log('Attempting to fetch fixtures...');
-        FixtureService.getAllFixtures()
+        setLoading(true);
+        setError(null);
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        FixtureService.getAllFixtures(signal)
             .then(response => {
+                if (signal.aborted) return;
                 console.log('Fixtures fetched successfully:', response.data);
                 setFixtures(response.data);
                 setFilteredFixtures(response.data);
                 setLoading(false);
             })
             .catch(error => {
+                if (signal.aborted) return;
                 console.error('Error fetching fixtures:', error);
                 if (error.response) {
                     console.error('Response data:', error.response.data);
@@ -62,6 +69,8 @@ const FixtureList = () => {
                 setError('Failed to fetch fixtures. Your session may have expired. Please log in again.');
                 setLoading(false);
             });
+
+        return () => controller.abort();
     }, []);
     const applyFilters = useCallback((filterValues) => {
         setLoading(true);
@@ -187,22 +196,25 @@ const FixtureList = () => {
     useEffect(() => {
         if (!fixtures.length) return;
 
-        const compareCounterValues = (a, b) => {
-            const aValue = a[sortField];
-            const bValue = b[sortField];
+        // Sort without modifying filteredFixtures
+        const applySort = (data) => {
+            const compareCounterValues = (a, b) => {
+                const aValue = a[sortField];
+                const bValue = b[sortField];
 
-            // Handle null values
-            if (aValue === null && bValue === null) return 0;
-            if (aValue === null) return sortDirection === 'asc' ? -1 : 1;
-            if (bValue === null) return sortDirection === 'asc' ? 1 : -1;
+                // Handle null values
+                if (aValue === null && bValue === null) return 0;
+                if (aValue === null) return sortDirection === 'asc' ? -1 : 1;
+                if (bValue === null) return sortDirection === 'asc' ? 1 : -1;
 
-            return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+            };
+
+            return [...data].sort(compareCounterValues);
         };
 
-        const sortedFixtures = [...filteredFixtures].sort(compareCounterValues);
-
-        setFilteredFixtures(sortedFixtures);
-    }, [sortField, sortDirection, filteredFixtures, fixtures.length]);
+        setFilteredFixtures(applySort(fixtures));
+    }, [sortField, sortDirection, fixtures]);
 
     if (loading) {
         return (

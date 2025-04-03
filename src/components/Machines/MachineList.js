@@ -40,14 +40,21 @@ const MachineList = () => {
     // 2. All function declarations
     const fetchMachines = useCallback(() => {
         console.log('Attempting to fetch machines...');
-        MachineService.getAllMachines()
+        setLoading(true);
+        setError(null);
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        MachineService.getAllMachines(signal)
             .then(response => {
+                if (signal.aborted) return;
                 console.log('Machines fetched successfully:', response.data);
                 setMachines(response.data);
                 setFilteredMachines(response.data);
                 setLoading(false);
             })
             .catch(error => {
+                if (signal.aborted) return;
                 console.error('Error fetching machines:', error);
                 if (error.response) {
                     console.error('Response data:', error.response.data);
@@ -57,9 +64,11 @@ const MachineList = () => {
                 } else {
                     console.error('Error message:', error.message);
                 }
-                setError('Failed to fetch machines.  Your session may have expired. Please log in again.');
+                setError('Failed to fetch machines. Your session may have expired. Please log in again.');
                 setLoading(false);
             });
+
+        return () => controller.abort();
     }, []);
     const applyFilters = useCallback((filterValues) => {
         setLoading(true);
