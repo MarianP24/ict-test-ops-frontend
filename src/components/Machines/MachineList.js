@@ -22,6 +22,7 @@ const MachineList = () => {
     const [machines, setMachines] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isFiltering, setIsFiltering] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [editingMachine, setEditingMachine] = useState(null);
@@ -204,6 +205,7 @@ const MachineList = () => {
                             setFilters={setFilters}
                             applyFilters={applyFilters}
                             columns={filterColumns}
+                            setIsFiltering={setIsFiltering}
                         />
 
                     </div>
@@ -229,6 +231,7 @@ const MachineList = () => {
                 <MachineTable
                     machines={machines}
                     filteredMachines={filteredMachines}
+                    isFiltering={isFiltering}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                     handleViewFixtures={handleViewFixtures}

@@ -23,6 +23,7 @@ const FixtureList = () => {
     const [fixtures, setFixtures] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isFiltering, setIsFiltering] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [editingFixture, setEditingFixture] = useState(null);
@@ -249,6 +250,7 @@ const FixtureList = () => {
                             setFilters={setFilters}
                             applyFilters={applyFilters}
                             columns={filterColumns}
+                            setIsFiltering={setIsFiltering}
                         />
 
                     </div>
@@ -278,6 +280,7 @@ const FixtureList = () => {
 
                 <FixtureTable
                     filteredFixtures={filteredFixtures}
+                    isFiltering={isFiltering}
                     sortField={sortField}
                     sortDirection={sortDirection}
                     handleSort={handleSort}

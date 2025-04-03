@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 
-const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
+const TableFilterBar = ({filters, setFilters, applyFilters, columns, setIsFiltering}) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const [activeFilterCount, setActiveFilterCount] = useState(0);
@@ -28,11 +28,23 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
     }, [columns]);
     const handleApplyFilters = useCallback(() => {
         setFilters(tempFilters);
+
+        // Check if any filter is active
+        const hasActiveFilters = Object.values(tempFilters).some(value => {
+            if (value === null || value === undefined) return false;
+            return typeof value === 'string' ? value.trim() !== '' : Boolean(value);
+        });
+
+        // Set the filtering flag
+        if (setIsFiltering) {
+            setIsFiltering(hasActiveFilters);
+        }
+
         if (applyFilters) {
             applyFilters(tempFilters);
         }
         setIsOpen(false);
-    }, [tempFilters, setFilters, applyFilters]);
+    }, [tempFilters, setFilters, applyFilters, setIsFiltering]);
     const clearFilters = useCallback(() => {
         const emptyFilters = Object.keys(filters).reduce((acc, key) => {
             acc[key] = '';
@@ -42,10 +54,15 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns}) => {
         setFilters(emptyFilters);
         setTempFilters(emptyFilters);
 
+        // When clearing filters, set filtering flag to false
+        if (setIsFiltering) {
+            setIsFiltering(false);
+        }
+
         if (applyFilters) {
             applyFilters(emptyFilters);
         }
-    }, [filters, setFilters, applyFilters]);
+    }, [filters, setFilters, applyFilters, setIsFiltering]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -169,7 +186,8 @@ TableFilterBar.propTypes = {
         key: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired
-    })).isRequired
+    })).isRequired,
+    setIsFiltering: PropTypes.func
 };
 
 export default TableFilterBar;

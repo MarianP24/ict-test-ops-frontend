@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import Pagination from '../common/Pagination';
 import PropTypes from 'prop-types';
-import {EditButton, DeleteButton, AssignButton, ConnectionIcon} from '../common/sharedComponents';
+import {EditButton, DeleteButton, AssignButton} from '../common/sharedComponents';
 
 const FixtureTable = ({
                           filteredFixtures,
+                          isFiltering,
                           sortField,
                           sortDirection,
                           handleSort,
@@ -107,9 +108,10 @@ const FixtureTable = ({
                         <tr>
                             <td colSpan="8"
                                 className="px-6 py-12 whitespace-nowrap text-center text-base text-gray-500">
-                                <ConnectionIcon/>
-                                <p className="mt-2">No fixtures found</p>
-                                <p className="mt-1 text-sm">Add a new fixture to get started</p>
+                                <p className="mt-2">No fixtures found. Try adjusting your filters!</p>
+                                {filteredFixtures.length === 0 && !isFiltering && (
+                                    <p className="mt-1 text-sm">Add a new fixture to get started</p>
+                                )}
                             </td>
                         </tr>
                     )}
@@ -143,6 +145,8 @@ FixtureTable.propTypes = {
             counter: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         })
     ).isRequired,
+
+    isFiltering: PropTypes.bool,
 
     // Sorting props
     sortField: PropTypes.string,

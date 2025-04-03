@@ -1,10 +1,11 @@
 import React from 'react';
-import {EditButton, DeleteButton, ConnectionIcon} from '../common/sharedComponents';
+import {EditButton, DeleteButton} from '../common/sharedComponents';
 
 
 const MachineTable = ({
                           machines,
                           filteredMachines,
+                          isFiltering,
                           handleEdit,
                           handleDelete,
                           handleViewFixtures
@@ -46,7 +47,7 @@ const MachineTable = ({
                     </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    {machines.length > 0 ? (
+                    {filteredMachines.length > 0 ? (
                         filteredMachines.map((machine, index) => {
                             return (
                                 <tr
@@ -79,9 +80,10 @@ const MachineTable = ({
                         <tr>
                             <td colSpan="7"
                                 className="px-6 py-12 whitespace-nowrap text-center text-base text-gray-500">
-                                <ConnectionIcon/>
-                                <p className="mt-2">No machines found</p>
-                                <p className="mt-1 text-sm">Add a new machine to get started</p>
+                                <p className="mt-2">No machines found. Try adjusting your filters!</p>
+                                {machines.length === 0 && !isFiltering && (
+                                    <p className="mt-1 text-sm">Add a new machine to get started</p>
+                                )}
                             </td>
                         </tr>
                     )}
