@@ -138,8 +138,8 @@ const MachineList = () => {
     const handleMachineUpdated = (updatedMachine) => {
         setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
         fetchMachines();
-        setEditingMachine(null);
         setShowAddForm(false); // close the form after updating
+        setEditingMachine(null);
     };
     const handleDelete = (id) => {
         setDeleteConfirm(id);
@@ -150,6 +150,7 @@ const MachineList = () => {
             MachineService.deleteMachine(deleteConfirm)
                 .then(() => {
                     setMachines(machines.filter(machine => machine.id !== deleteConfirm));
+                    setFilteredMachines(filteredMachines.filter(machine => machine.id !== deleteConfirm));
                     setDeleteConfirm(null);
                 })
                 .catch(err => {
@@ -194,7 +195,7 @@ const MachineList = () => {
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
             {/* Header section */}
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <div className="sm:flex sm:items-center sm:justify-between mb-8">
 
                     <div>
@@ -216,7 +217,6 @@ const MachineList = () => {
                             onClick={toggleAddForm}
                         />
                     </div>
-
                 </div>
 
                 <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
@@ -229,7 +229,6 @@ const MachineList = () => {
                 </AddEditModal>
 
                 <MachineTable
-                    machines={machines}
                     filteredMachines={filteredMachines}
                     isFiltering={isFiltering}
                     handleEdit={handleEdit}
@@ -243,10 +242,6 @@ const MachineList = () => {
                     fixtures={selectedMachineFixtures}
                     machineName={selectedMachineName}
                 />
-
-                <div className="mt-4 text-center text-xs text-gray-500">
-                    Showing {filteredMachines.length} machines in total
-                </div>
 
                 <DeleteModal
                     isOpen={deleteConfirm !== null}

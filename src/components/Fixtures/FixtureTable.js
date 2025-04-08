@@ -119,16 +119,21 @@ const FixtureTable = ({
                 </table>
             </div>
 
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-                itemName="fixtures"
-            />
+            {totalItems > 10 ? (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={setCurrentPage}
+                    itemName="fixtures"
+                />
+            ) : (
+                <div className="mt-4 text-center text-xs text-gray-500">
+                    Showing {filteredFixtures.length} fixtures in total
+                </div>
+            )}
         </div>
-
     );
 };
 

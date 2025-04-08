@@ -1,15 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
+import Pagination from '../common/Pagination';
+import PropTypes from 'prop-types';
 import {EditButton, DeleteButton} from '../common/sharedComponents';
 
 
 const MachineTable = ({
-                          machines,
                           filteredMachines,
                           isFiltering,
                           handleEdit,
                           handleDelete,
                           handleViewFixtures
                       }) => {
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10; // Or whatever number you prefer
+
+    const totalItems = filteredMachines.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // Calculate current page items
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredMachines.slice(indexOfFirstItem, indexOfLastItem);
+
+
     return (
         <div className="space-y-4 w-full">
             <div className="w-full bg-white shadow-xl rounded-lg overflow-auto">
@@ -47,21 +61,21 @@ const MachineTable = ({
                     </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredMachines.length > 0 ? (
-                        filteredMachines.map((machine, index) => {
+                    {currentItems.length > 0 ? (
+                        currentItems.map((machine, index) => {
                             return (
                                 <tr
                                     key={machine.id}
                                     className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
                                     onClick={() => handleViewFixtures(machine)}
                                 >
-                                    <td className="text-sm text-center text-gray-700">{index + 1}</td>
+                                    <td className="py-2 text-sm text-center text-gray-700">{indexOfFirstItem + index + 1}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.equipmentName}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.internalFactory}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.serialNumber}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.equipmentType}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.hostname}</td>
-                                    <td className="py-2 whitespace-nowrap text-center text-sm font-medium">
+                                    <td className="py-2 text-center text-sm font-medium">
 
                                         <EditButton
                                             title="Edit machine"
@@ -81,7 +95,7 @@ const MachineTable = ({
                             <td colSpan="7"
                                 className="px-6 py-12 whitespace-nowrap text-center text-base text-gray-500">
                                 <p className="mt-2">No machines found. Try adjusting your filters!</p>
-                                {machines.length === 0 && !isFiltering && (
+                                {filteredMachines.length === 0 && !isFiltering && (
                                     <p className="mt-1 text-sm">Add a new machine to get started</p>
                                 )}
                             </td>
@@ -90,8 +104,40 @@ const MachineTable = ({
                     </tbody>
                 </table>
             </div>
+
+            {totalItems > 10 ? (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={setCurrentPage}
+                    itemName="machines"
+                />
+            ) : (
+                <div className="mt-4 text-center text-xs text-gray-500">
+                    Showing {filteredMachines.length} machines in total
+                </div>
+            )}
         </div>
     );
+};
+
+MachineTable.propTypes = {
+    filteredMachines: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            equipmentName: PropTypes.string.isRequired,
+            internalFactory: PropTypes.string.isRequired,
+            serialNumber: PropTypes.string.isRequired,
+            equipmentType: PropTypes.string.isRequired,
+            hostname: PropTypes.string.isRequired
+        })
+    ).isRequired,
+    isFiltering: PropTypes.bool.isRequired,
+    handleEdit: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleViewFixtures: PropTypes.func.isRequired
 };
 
 export default MachineTable;
