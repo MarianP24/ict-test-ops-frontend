@@ -14,7 +14,7 @@ import {
     LoadingTableErrorMessage,
     AddEditModal,
     AddNewButton,
-    TableFilterBar
+    TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
 
 const MachineList = () => {
@@ -167,6 +167,125 @@ const MachineList = () => {
         setEditingMachine({...machine});
         setShowAddForm(true);
     }
+    const handleDownloadFilteredData = () => {
+        // Early return if no data to download
+        if (filteredMachines.length === 0) {
+            // You could add a toast notification here if you have a notification system
+            console.warn("No data available to export");
+            return;
+        }
+
+        try {
+            // Convert data to CSV
+            const csvData = convertMachinesToCSV(filteredMachines);
+
+            // Create a Blob containing the CSV data with UTF-8 BOM for Excel compatibility
+            // The \ufeff is a UTF-8 BOM (Byte Order Mark) that helps Excel recognize the CSV as UTF-8
+            const blob = new Blob(["\ufeff" + csvData], {type: 'text/csv;charset=utf-8;'});
+
+            // Create and set up the download link
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+
+            // Set up the filename with date for better organization
+            const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            let filename = `machines`;
+
+            // Add filter indication if filters are applied
+            if (isFiltering) {
+                // Get active filter values for the filename
+                const activeFilters = Object.entries(filters)
+                    .filter(([_, value]) => value && value.trim() !== '')
+                    .map(([key, _]) => key.toLowerCase())
+                    .join('_');
+
+                if (activeFilters) {
+                    filename += `_filtered_by_${activeFilters}`;
+                } else {
+                    filename += '_filtered';
+                }
+            }
+
+            filename += `_${date}.csv`;
+
+            // Set link attributes
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+
+            // Add to DOM, trigger download, and clean up
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Release the object URL to free memory
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Error exporting data:", error);
+            // Handle error - you could set an error state here if needed
+            setError("Failed to export data. Please try again.");
+        }
+    };
+    const convertMachinesToCSV = (machines) => {
+        if (!machines || machines.length === 0) return '';
+
+        // Use the first machine to determine all available fields
+        // This approach is more dynamic and will include all fields
+        const firstMachine = machines[0];
+        const headers = Object.keys(firstMachine).filter(key =>
+            // Optionally exclude certain fields you don't want in the export
+            !['__v', 'createdAt', 'updatedAt'].includes(key)
+        );
+
+        // Create user-friendly header labels
+        const headerLabels = headers.map(header => {
+            // Convert camelCase to Title Case with spaces
+            return header
+                .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+                .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+        });
+
+        // Create the CSV rows array, starting with headers
+        const rows = [headerLabels.join(',')];
+
+        // Add data rows
+        for (const machine of machines) {
+            const values = headers.map(header => {
+                // Get the value, handling null/undefined
+                let value = machine[header];
+
+                // Convert null/undefined to empty string
+                if (value === null || value === undefined) {
+                    return '';
+                }
+
+                // Format Date objects
+                if (value instanceof Date) {
+                    return value.toISOString().split('T')[0]; // YYYY-MM-DD format
+                }
+
+                // Convert objects/arrays to JSON strings
+                if (typeof value === 'object') {
+                    value = JSON.stringify(value);
+                }
+
+                // Handle string values that may contain commas, quotes, or newlines
+                if (typeof value === 'string') {
+                    // Escape quotes by doubling them
+                    const escapedValue = value.replace(/"/g, '""');
+                    // Wrap in quotes if value contains commas, quotes, or newlines
+                    return /[,"\n\r]/.test(value) ? `"${escapedValue}"` : value;
+                }
+
+                return value;
+            });
+
+            rows.push(values.join(','));
+        }
+
+        return rows.join('\n');
+    };
+
 
     // 3. useEffect hooks
     useEffect(() => {
@@ -199,7 +318,7 @@ const MachineList = () => {
                 <div className="sm:flex sm:items-center sm:justify-between mb-8">
 
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-2">Machine Management System</h1>
 
                         <TableFilterBar
                             filters={filters}
@@ -207,6 +326,11 @@ const MachineList = () => {
                             applyFilters={applyFilters}
                             columns={filterColumns}
                             setIsFiltering={setIsFiltering}
+                        />
+
+                        <DownloadButton
+                            onClick={handleDownloadFilteredData}
+                            label="Export Data"
                         />
 
                     </div>

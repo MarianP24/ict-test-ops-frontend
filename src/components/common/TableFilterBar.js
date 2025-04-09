@@ -83,15 +83,13 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns, setIsFilter
     }, [filters]);
 
     return (
-        <div className="mb-4 relative" ref={dropdownRef}>
+        <div className="mb-1 relative" ref={dropdownRef}>
             <div className="flex items-center">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className={`px-4 py-2 rounded-md flex items-center gap-2 transition-colors ${
-                        activeFilterCount > 0
-                            ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`px-4 py-2 rounded-md flex items-center gap-2 transition-colors 
+                text-white bg-primary-600 hover:bg-primary-700 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
                     aria-expanded={isOpen}
                     aria-controls="filter-dropdown"
                 >
@@ -103,9 +101,9 @@ const TableFilterBar = ({filters, setFilters, applyFilters, columns, setIsFilter
                     <span className="font-medium">Filters</span>
                     {activeFilterCount > 0 && (
                         <span
-                            className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-primary-100 bg-primary-700 rounded-full">
-                            {activeFilterCount}
-                        </span>
+                            className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none bg-white text-primary-700 rounded-full">
+            {activeFilterCount}
+        </span>
                     )}
                 </button>
 

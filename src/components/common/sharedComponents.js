@@ -13,3 +13,4 @@ export { default as AssignButton } from './buttons/AssignButton';
 export { default as AddNewButton } from './buttons/AddNewButton';
 export { default as MaintenanceReportAllButton } from './buttons/MaintenanceReportAllButton';
 export { default as TableFilterBar } from './TableFilterBar';
+export { default as DownloadButton } from './buttons/DownloadButton';
