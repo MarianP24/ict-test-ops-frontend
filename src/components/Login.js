@@ -126,7 +126,7 @@ const Login = () => {
                                     </svg>
                                 </span>
                             )}
-                            {loading ? 'Signing in...' : 'Sign in'}
+                            {loading ? '' : 'Sign in'}
                         </button>
                     </div>
                 </form>
