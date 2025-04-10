@@ -243,7 +243,7 @@ const FixtureList = () => {
                 <div className="sm:flex sm:items-center sm:justify-between mb-8">
 
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-2">Fixture Management System</h1>
 
                         <TableFilterBar
                             filters={filters}
@@ -255,7 +255,7 @@ const FixtureList = () => {
 
                     </div>
 
-                    <div className="mt-4 sm:mt-0 flex flex-col space-y-2">
+                    <div className="mt-12 sm:mt-12 flex flex-col space-y-2">
                         <AddNewButton
                             label="Add New Fixture"
                             onClick={toggleAddForm}
@@ -265,8 +265,8 @@ const FixtureList = () => {
                             label="Create Maintenance Report"
                             onClick={handleCreateMaintenanceReport}
                         />
-
                     </div>
+
                 </div>
 
                 <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>

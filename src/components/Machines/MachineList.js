@@ -312,37 +312,51 @@ const MachineList = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
-            {/* Header section */}
-            <div className="max-w-6xl mx-auto">
-                <div className="sm:flex sm:items-center sm:justify-between mb-8">
+        <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
+            <div className="max-w-6xl mx-auto"> {/* Table width */}
 
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-2">Machine Management System</h1>
+                <div className="page-header mb-2">{/* Header section */}
+                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
+                </div>
 
-                        <TableFilterBar
-                            filters={filters}
-                            setFilters={setFilters}
-                            applyFilters={applyFilters}
-                            columns={filterColumns}
-                            setIsFiltering={setIsFiltering}
-                        />
+                <div
+                    className="page-controls mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8">
+                    <div className="filters-container w-full">
+                        <div className="w-2/5">
+                            <TableFilterBar
+                                filters={filters}
+                                setFilters={setFilters}
+                                applyFilters={applyFilters}
+                                columns={filterColumns}
+                                setIsFiltering={setIsFiltering}
+                            />
+                        </div>
 
-                        <DownloadButton
-                            onClick={handleDownloadFilteredData}
-                            label="Export Data"
-                        />
+                        <div className="flex justify-between mt-1">
+                            <DownloadButton
+                                onClick={handleDownloadFilteredData}
+                                label="Export Data"
+                            />
 
-                    </div>
-
-                    <div className="mt-4 sm:mt-0">
-                        <AddNewButton
-                            label="Add New Machine"
-                            onClick={toggleAddForm}
-                        />
+                            <AddNewButton
+                                label="Add New Machine"
+                                onClick={toggleAddForm}
+                            />
+                        </div>
                     </div>
                 </div>
 
+                <div className="page-content mb-8">
+                    <MachineTable
+                        filteredMachines={filteredMachines}
+                        isFiltering={isFiltering}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                        handleViewFixtures={handleViewFixtures}
+                    />
+                </div>
+
+                {/* Modals */}
                 <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
                     <AddMachineForm
                         onMachineAdded={handleMachineAdded}
@@ -351,14 +365,6 @@ const MachineList = () => {
                         onCancel={toggleAddForm}
                     />
                 </AddEditModal>
-
-                <MachineTable
-                    filteredMachines={filteredMachines}
-                    isFiltering={isFiltering}
-                    handleEdit={handleEdit}
-                    handleDelete={handleDelete}
-                    handleViewFixtures={handleViewFixtures}
-                />
 
                 <FixturesModal
                     isOpen={showFixturesModal}
@@ -376,8 +382,7 @@ const MachineList = () => {
                 />
             </div>
         </div>
-    )
-        ;
+    );
 };
 
 export default MachineList;
