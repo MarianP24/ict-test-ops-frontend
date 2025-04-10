@@ -15,7 +15,7 @@ import {
     AddEditModal,
     AddNewButton,
     MaintenanceReportAllButton,
-    TableFilterBar
+    TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
 
 const FixtureList = () => {
@@ -189,6 +189,124 @@ const FixtureList = () => {
                 setError("Failed to create maintenance report. Please try again.");
             });
     };
+    const handleDownloadFilteredData = () => {
+        // Early return if no data to download
+        if (filteredFixtures.length === 0) {
+            // You could add a toast notification here if you have a notification system
+            console.warn("No data available to export");
+            return;
+        }
+
+        try {
+            // Convert data to CSV
+            const csvData = convertFixturesToCSV(filteredFixtures);
+
+            // Create a Blob containing the CSV data with UTF-8 BOM for Excel compatibility
+            // The \ufeff is a UTF-8 BOM (Byte Order Mark) that helps Excel recognize the CSV as UTF-8
+            const blob = new Blob(["\ufeff" + csvData], {type: 'text/csv;charset=utf-8;'});
+
+            // Create and set up the download link
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+
+            // Set up the filename with date for better organization
+            const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            let filename = `fixtures`;
+
+            // Add filter indication if filters are applied
+            if (isFiltering) {
+                // Get active filter values for the filename
+                const activeFilters = Object.entries(filters)
+                    .filter(([_, value]) => value && value.trim() !== '')
+                    .map(([key, _]) => key.toLowerCase())
+                    .join('_');
+
+                if (activeFilters) {
+                    filename += `_filtered_by_${activeFilters}`;
+                } else {
+                    filename += '_filtered';
+                }
+            }
+
+            filename += `_${date}.csv`;
+
+            // Set link attributes
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+
+            // Add to DOM, trigger download, and clean up
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Release the object URL to free memory
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Error exporting data:", error);
+            // Handle error - you could set an error state here if needed
+            setError("Failed to export data. Please try again.");
+        }
+    };
+    const convertFixturesToCSV = (fixtures) => {
+        if (!fixtures || fixtures.length === 0) return '';
+
+        // Use the first fixture to determine all available fields
+        // This approach is more dynamic and will include all fields
+        const firstFixture = fixtures[0];
+        const headers = Object.keys(firstFixture).filter(key =>
+            // Optionally exclude certain fields you don't want in the export
+            !['__v', 'createdAt', 'updatedAt'].includes(key)
+        );
+
+        // Create user-friendly header labels
+        const headerLabels = headers.map(header => {
+            // Convert camelCase to Title Case with spaces
+            return header
+                .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+                .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+        });
+
+        // Create the CSV rows array, starting with headers
+        const rows = [headerLabels.join(',')];
+
+        // Add data rows
+        for (const fixture of fixtures) {
+            const values = headers.map(header => {
+                // Get the value, handling null/undefined
+                let value = fixture[header];
+
+                // Convert null/undefined to empty string
+                if (value === null || value === undefined) {
+                    return '';
+                }
+
+                // Format Date objects
+                if (value instanceof Date) {
+                    return value.toISOString().split('T')[0]; // YYYY-MM-DD format
+                }
+
+                // Convert objects/arrays to JSON strings
+                if (typeof value === 'object') {
+                    value = JSON.stringify(value);
+                }
+
+                // Handle string values that may contain commas, quotes, or newlines
+                if (typeof value === 'string') {
+                    // Escape quotes by doubling them
+                    const escapedValue = value.replace(/"/g, '""');
+                    // Wrap in quotes if value contains commas, quotes, or newlines
+                    return /[,"\n\r]/.test(value) ? `"${escapedValue}"` : value;
+                }
+
+                return value;
+            });
+
+            rows.push(values.join(','));
+        }
+
+        return rows.join('\n');
+    };
 
     // 3. useEffect hooks
     useEffect(() => {
@@ -237,38 +355,69 @@ const FixtureList = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
-            {/* Header section */}
-            <div className="max-w-6xl mx-auto">
-                <div className="sm:flex sm:items-center sm:justify-between mb-8">
+        <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
+            <div className="max-w-6xl mx-auto"> {/* Table width */}
 
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-2">Fixture Management System</h1>
+                <div className="page-header mb-2 ">{/* Header section with flex */}
+                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
 
-                        <TableFilterBar
-                            filters={filters}
-                            setFilters={setFilters}
-                            applyFilters={applyFilters}
-                            columns={filterColumns}
-                            setIsFiltering={setIsFiltering}
-                        />
-
-                    </div>
-
-                    <div className="mt-12 sm:mt-12 flex flex-col space-y-2">
-                        <AddNewButton
-                            label="Add New Fixture"
-                            onClick={toggleAddForm}
-                        />
-
-                        <MaintenanceReportAllButton
-                            label="Create Maintenance Report"
-                            onClick={handleCreateMaintenanceReport}
-                        />
-                    </div>
 
                 </div>
 
+                <div
+                    className="page-controls mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8">
+                    <div className="filters-container w-full flex flex-col sm:flex-row sm:justify-between items-start">
+                        {/* Left section with filter and download  */}
+                        <div className="flex flex-col w-full md:w-6/12 lg:w-5/12">
+                            <div className="w-full">
+                                <TableFilterBar
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    applyFilters={applyFilters}
+                                    columns={filterColumns}
+                                    setIsFiltering={setIsFiltering}
+                                />
+                            </div>
+
+                                <div className="self-start">
+                                    <DownloadButton
+                                        onClick={handleDownloadFilteredData}
+                                        label="Export Data"
+                                        className="text-sm px-3 py-2.5"
+                                    />
+                                </div>
+                        </div>
+
+                        {/* Right section with Maintenance and AddNewButton  */}
+                        <div className="flex flex-col space-y-1 items-center">
+                            <MaintenanceReportAllButton
+                                label="Create Maintenance Report"
+                                onClick={handleCreateMaintenanceReport}
+                            />
+                            <div className="flex justify-end w-full">
+                                <AddNewButton
+                                    label="Add New Machine"
+                                    onClick={toggleAddForm}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="page-content mb-8">
+                    <FixtureTable
+                        filteredFixtures={filteredFixtures}
+                        isFiltering={isFiltering}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        handleSort={handleSort}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                        handleAssignToMachine={handleAssignToMachine}
+                    />
+                </div>
+
+                {/* Modals */}
                 <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
                     <AddFixtureForm
                         onFixtureAdded={handleFixtureAdded}
@@ -277,17 +426,6 @@ const FixtureList = () => {
                         onCancel={toggleAddForm}
                     />
                 </AddEditModal>
-
-                <FixtureTable
-                    filteredFixtures={filteredFixtures}
-                    isFiltering={isFiltering}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                    handleSort={handleSort}
-                    handleEdit={handleEdit}
-                    handleDelete={handleDelete}
-                    handleAssignToMachine={handleAssignToMachine}
-                />
 
                 <DeleteModal
                     isOpen={deleteConfirm !== null}
