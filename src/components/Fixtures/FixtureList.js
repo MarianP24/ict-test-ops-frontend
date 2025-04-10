@@ -251,16 +251,16 @@ const FixtureList = () => {
     const convertFixturesToCSV = (fixtures) => {
         if (!fixtures || fixtures.length === 0) return '';
 
-        // Use the first fixture to determine all available fields
-        // This approach is more dynamic and will include all fields
+        // Define custom headers with the display ID
         const firstFixture = fixtures[0];
-        const headers = Object.keys(firstFixture).filter(key =>
-            // Optionally exclude certain fields you don't want in the export
-            !['__v', 'createdAt', 'updatedAt'].includes(key)
-        );
+        const headers = ['displayId', ...Object.keys(firstFixture).filter(key =>
+            // Exclude certain fields you don't want in the export, including the actual id
+            !['__v', 'createdAt', 'updatedAt', 'id'].includes(key)
+        )];
 
         // Create user-friendly header labels
         const headerLabels = headers.map(header => {
+            if (header === 'displayId') return 'ID';
             // Convert camelCase to Title Case with spaces
             return header
                 .replace(/([A-Z])/g, ' $1') // Add space before capital letters
@@ -271,8 +271,14 @@ const FixtureList = () => {
         const rows = [headerLabels.join(',')];
 
         // Add data rows
-        for (const fixture of fixtures) {
+        for (let i = 0; i < fixtures.length; i++) {
+            const fixture = fixtures[i];
             const values = headers.map(header => {
+                // For the displayId, use sequential numbering
+                if (header === 'displayId') {
+                    return i + 1; // Start from 1
+                }
+
                 // Get the value, handling null/undefined
                 let value = fixture[header];
 

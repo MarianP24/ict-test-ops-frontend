@@ -229,16 +229,14 @@ const MachineList = () => {
     const convertMachinesToCSV = (machines) => {
         if (!machines || machines.length === 0) return '';
 
-        // Use the first machine to determine all available fields
-        // This approach is more dynamic and will include all fields
-        const firstMachine = machines[0];
-        const headers = Object.keys(firstMachine).filter(key =>
-            // Optionally exclude certain fields you don't want in the export
-            !['__v', 'createdAt', 'updatedAt'].includes(key)
-        );
+        // Define custom headers with the display ID
+        const headers = ['displayId', ...Object.keys(machines[0]).filter(key =>
+            !['__v', 'createdAt', 'updatedAt', 'id'].includes(key)
+        )];
 
         // Create user-friendly header labels
         const headerLabels = headers.map(header => {
+            if (header === 'displayId') return 'ID';
             // Convert camelCase to Title Case with spaces
             return header
                 .replace(/([A-Z])/g, ' $1') // Add space before capital letters
@@ -249,8 +247,14 @@ const MachineList = () => {
         const rows = [headerLabels.join(',')];
 
         // Add data rows
-        for (const machine of machines) {
+        for (let i = 0; i < machines.length; i++) {
+            const machine = machines[i];
             const values = headers.map(header => {
+                // For the displayId, use sequential numbering just like in the table
+                if (header === 'displayId') {
+                    return i + 1; // Start from 1
+                }
+
                 // Get the value, handling null/undefined
                 let value = machine[header];
 
