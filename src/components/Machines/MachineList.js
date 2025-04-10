@@ -335,7 +335,6 @@ const MachineList = () => {
                                 setIsFiltering={setIsFiltering}
                             />
                         </div>
-
                         <div className="flex justify-between mt-1">
                             <DownloadButton
                                 onClick={handleDownloadFilteredData}

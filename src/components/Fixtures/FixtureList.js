@@ -366,8 +366,6 @@ const FixtureList = () => {
 
                 <div className="page-header mb-2 ">{/* Header section with flex */}
                     <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Fixture Management System</h1>
-
-
                 </div>
 
                 <div
@@ -384,14 +382,13 @@ const FixtureList = () => {
                                     setIsFiltering={setIsFiltering}
                                 />
                             </div>
-
-                                <div className="self-start">
-                                    <DownloadButton
-                                        onClick={handleDownloadFilteredData}
-                                        label="Export Data"
-                                        className="text-sm px-3 py-2.5"
-                                    />
-                                </div>
+                            <div className="self-start">
+                                <DownloadButton
+                                    onClick={handleDownloadFilteredData}
+                                    label="Export Data"
+                                    className="text-sm px-3 py-2.5"
+                                />
+                            </div>
                         </div>
 
                         {/* Right section with Maintenance and AddNewButton  */}
