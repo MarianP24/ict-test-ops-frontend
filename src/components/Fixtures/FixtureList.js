@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import FixtureService from '../../services/FixtureService';
+import FixtureAssignedMachinesModal from "./FixtureAssignedMachineModal";
 
 // Fixture specific components
 import {
@@ -17,6 +18,7 @@ import {
     MaintenanceReportAllButton,
     TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
+
 
 const FixtureList = () => {
     // 1. All state declarations
@@ -39,6 +41,11 @@ const FixtureList = () => {
     const [sortDirection, setSortDirection] = useState('asc');
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [selectedFixture, setSelectedFixture] = useState(null);
+
+    const [showMachinesModal, setShowMachinesModal] = useState(false);
+    const [selectedFixtureMachines, setSelectedFixtureMachines] = useState([]);
+    const [selectedFixtureName, setSelectedFixtureName] = useState('');
+
 
     // 2. All function declarations
     const fetchFixtures = useCallback(() => {
@@ -138,6 +145,29 @@ const FixtureList = () => {
                 throw error;
             });
     };
+
+    const handleViewMachines = useCallback((fixture) => {
+        setLoading(true);
+        setSelectedFixtureName(fixture.programName || `Fixture ${fixture.id}`);
+
+        FixtureService.getFixtureMachineMap(fixture.id)
+            .then(response => {
+                console.log('Machines fetched successfully:', response.data);
+                setSelectedFixtureMachines(response.data);
+                setShowMachinesModal(true);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching machines:', error);
+                setError('Failed to fetch machines. Please try again later.');
+                setLoading(false);
+            });
+    }, []);
+
+    const handleCloseMachinesModal = () => {
+        setShowMachinesModal(false);
+    };
+
 
     // 2.2 CRUD operation functions
     const handleFixtureAdded = (newFixture) => {
@@ -417,6 +447,7 @@ const FixtureList = () => {
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
                         handleAssignToMachine={handleAssignToMachine}
+                        handleViewMachines={handleViewMachines}
                     />
                 </div>
 
@@ -444,6 +475,14 @@ const FixtureList = () => {
                     onClose={() => setShowAssignModal(false)}
                     onAssign={handleAssignFixture}
                 />
+
+                <FixtureAssignedMachinesModal
+                    isOpen={showMachinesModal}
+                    onClose={handleCloseMachinesModal}
+                    machines={selectedFixtureMachines}
+                    fixtureName={selectedFixtureName}
+                />
+
             </div>
         </div>
     );

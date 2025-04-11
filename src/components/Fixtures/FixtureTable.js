@@ -11,7 +11,8 @@ const FixtureTable = ({
                           handleSort,
                           handleEdit,
                           handleDelete,
-                          handleAssignToMachine
+                          handleAssignToMachine,
+                          handleViewMachines
                       }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Or whatever number you prefer
@@ -76,9 +77,10 @@ const FixtureTable = ({
                         currentItems.map((fixture, index) => (
                             <tr
                                 key={fixture.id}
-                                className="hover:bg-gray-100 transition-colors duration-200"
+                                className="hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                                onClick={() => handleViewMachines(fixture)}
                             >
-                                <td className="py-2 text-sm text-center text-gray-700">{indexOfFirstItem + index + 1}</td>
+                            <td className="py-2 text-sm text-center text-gray-700">{indexOfFirstItem + index + 1}</td>
                                 <td className="py-2 text-sm text-center text-gray-700">{fixture.programName}</td>
                                 <td className="py-2 text-sm text-center text-gray-700">{fixture.fileName}</td>
                                 <td className="py-2 text-sm text-center text-gray-700">{fixture.productName}</td>
@@ -161,7 +163,8 @@ FixtureTable.propTypes = {
     handleSort: PropTypes.func.isRequired,
     handleEdit: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
-    handleAssignToMachine: PropTypes.func.isRequired
+    handleAssignToMachine: PropTypes.func.isRequired,
+    handleViewMachines: PropTypes.func.isRequired
 };
 
 FixtureTable.defaultProps = {
