@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import './App.css';
 import FixtureList from "./components/Fixtures/FixtureList";
+import ApplicationPage from "./components/Application/ApplicationPage";
 
 function App() {
   return (
@@ -40,6 +41,13 @@ function App() {
                 <>
                   <Navbar />
                   <FixtureList />
+                </>
+              } />
+
+              <Route path="/application-service" element={
+                <>
+                  <Navbar />
+                  <ApplicationPage />
                 </>
               } />
 
