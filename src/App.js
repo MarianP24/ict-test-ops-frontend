@@ -11,11 +11,25 @@ import LandingPage from './components/LandingPage';
 import './App.css';
 import FixtureList from "./components/Fixtures/FixtureList";
 import ApplicationPage from "./components/Application/ApplicationPage";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
       <Router>
         <div className="min-h-screen bg-gray-50">
+          <ToastContainer
+              position="top-right"
+              autoClose={1500}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+          />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

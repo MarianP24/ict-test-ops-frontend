@@ -30,6 +30,10 @@ class FixtureService {
         return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, { signal });
     }
 
+    createMaintenanceReportForSingleFixture(fixtureId, signal) {
+        return api.post(`${index.api.endpoints.fixtures}/maintenance/${fixtureId}`, {}, { signal });
+    }
+
     getFixtureMachineMap(id, signal) {
         return api.get(`${index.api.endpoints.fixtures}/${id}/machineMap`, { signal });
     }

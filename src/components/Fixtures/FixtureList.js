@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import FixtureService from '../../services/FixtureService';
 import FixtureAssignedMachinesModal from "./FixtureAssignedMachineModal";
+import {toast} from "react-toastify";
 
 // Fixture specific components
 import {
@@ -18,6 +19,7 @@ import {
     MaintenanceReportAllButton,
     TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
+
 
 
 const FixtureList = () => {
@@ -143,6 +145,20 @@ const FixtureList = () => {
                 console.error('Error assigning fixture:', error);
                 // Re-throw the error so it can be caught by the modal's error handler
                 throw error;
+            });
+    };
+    const handleGenerateMaintenanceReport = (fixtureId) => {
+        setLoading(true);
+
+        FixtureService.createMaintenanceReportForSingleFixture(fixtureId)
+            .then(response => {
+                toast.success('Maintenance report generated successfully');
+                fetchFixtures();
+            })
+            .catch(error => {
+                console.error('Error generating maintenance report:', error);
+                toast.error(`Failed to generate maintenance report: ${error.response?.data || error.message}`);
+                setLoading(false);
             });
     };
 
@@ -448,6 +464,7 @@ const FixtureList = () => {
                         handleDelete={handleDelete}
                         handleAssignToMachine={handleAssignToMachine}
                         handleViewMachines={handleViewMachines}
+                        handleGenerateMaintenanceReport={handleGenerateMaintenanceReport}
                     />
                 </div>
 

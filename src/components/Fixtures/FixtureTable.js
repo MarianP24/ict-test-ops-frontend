@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Pagination from '../common/Pagination';
 import PropTypes from 'prop-types';
-import {EditButton, DeleteButton, AssignButton} from '../common/sharedComponents';
+import {EditButton, DeleteButton, AssignButton, MaintenanceReportSingleButton} from '../common/sharedComponents';
 
 const FixtureTable = ({
                           filteredFixtures,
@@ -12,7 +12,8 @@ const FixtureTable = ({
                           handleEdit,
                           handleDelete,
                           handleAssignToMachine,
-                          handleViewMachines
+                          handleViewMachines,
+                          handleGenerateMaintenanceReport
                       }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; // Or whatever number you prefer
@@ -24,7 +25,6 @@ const FixtureTable = ({
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredFixtures.slice(indexOfFirstItem, indexOfLastItem);
-
 
     return (
         <div className="space-y-4 w-full">
@@ -102,6 +102,12 @@ const FixtureTable = ({
                                     <AssignButton
                                         title="Assign to Machine"
                                         onClick={() => handleAssignToMachine(fixture)}
+                                    />
+
+                                    <MaintenanceReportSingleButton
+                                        fixtureId={fixture.id}
+                                        title="Generate maintenance report for this fixture"
+                                        onClick={handleGenerateMaintenanceReport}
                                     />
                                 </td>
                             </tr>
