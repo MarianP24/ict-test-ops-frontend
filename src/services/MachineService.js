@@ -45,6 +45,18 @@ class MachineService {
             signal
         });
     }
+
+    assignVpnServer(machineId, vpnServerId, signal) {
+        return api.put(`${index.api.endpoints.machines}/${machineId}/assign-vpn`, null, {
+            params: { vpnServerId },
+            signal
+        });
+    }
+
+    removeVpnServer(machineId, signal) {
+        return api.put(`${index.api.endpoints.machines}/${machineId}/remove-vpn`, null, { signal });
+    }
+
 }
 
 export default new MachineService();

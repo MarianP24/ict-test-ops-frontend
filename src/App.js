@@ -13,6 +13,7 @@ import FixtureList from "./components/Fixtures/FixtureList";
 import ApplicationPage from "./components/Application/ApplicationPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import VpnServerList from "./components/VpnServers/VpnServerList";
 
 function App() {
   return (
@@ -55,6 +56,13 @@ function App() {
                 <>
                   <Navbar />
                   <FixtureList />
+                </>
+              } />
+
+              <Route path="/vpn-servers" element={
+                <>
+                  <Navbar />
+                  <VpnServerList />
                 </>
               } />
 

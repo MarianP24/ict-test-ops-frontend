@@ -8,7 +8,8 @@ const config = {
             users: '/api/users',
             machines: '/machines',
             fixtures: '/fixtures',
-            applicationService: '/application-service'
+            applicationService: '/application-service',
+            vpnServers: '/vpn-servers'
         },
         timeout: parseInt(process.env.REACT_APP_API_TIMEOUT || '30000', 10),
     },

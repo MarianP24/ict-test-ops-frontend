@@ -1,39 +1,37 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import MachineService from '../../services/MachineService';
+import VpnServerService from '../../services/VpnServerService';
 
-const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
-    const initialMachineState = useMemo(() => ({
-        equipmentName: '',
-        internalFactory: '',
-        serialNumber: '',
-        equipmentType: '',
-        hostname: ''
+const AddVpnServerForm = ({onVpnServerAdded, onVpnServerUpdated, editVpnServer}) => {
+    const initialVpnServerState = useMemo(() => ({
+        vpnName: '',
+        serverAddress: '',
+        destinationNetwork: ''
     }), []);
 
-    const [machine, setMachine] = useState(initialMachineState);
+    const [vpnServer, setVpnServer] = useState(initialVpnServerState);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
     useEffect(() => {
-        if (editMachine) {
-            setMachine(editMachine);
+        if (editVpnServer) {
+            setVpnServer(editVpnServer);
             setIsEditMode(true);
         } else {
-            setMachine(initialMachineState);
+            setVpnServer(initialVpnServerState);
             setIsEditMode(false);
         }
-    }, [editMachine, initialMachineState]);
+    }, [editVpnServer, initialVpnServerState]);
 
     const handleInputChange = event => {
         const {name, value} = event.target;
-        setMachine({...machine, [name]: value});
+        setVpnServer({...vpnServer, [name]: value});
     };
 
-    const saveMachine = () => {
+    const saveVpnServer = () => {
         // Validate form
-        if (!machine.equipmentName || !machine.serialNumber || !machine.equipmentType) {
+        if (!vpnServer.vpnName || !vpnServer.serverAddress || !vpnServer.destinationNetwork) {
             setError("Please fill in all required fields");
             return;
         }
@@ -41,40 +39,38 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
         setIsSubmitting(true);
 
         const data = {
-            equipmentName: machine.equipmentName,
-            internalFactory: parseInt(machine.internalFactory) || 0,
-            serialNumber: machine.serialNumber,
-            equipmentType: machine.equipmentType,
-            hostname: machine.hostname
+            vpnName: vpnServer.vpnName,
+            serverAddress: vpnServer.serverAddress,
+            destinationNetwork: vpnServer.destinationNetwork
         };
 
         if (isEditMode) {
-            // Update existing machine
-            MachineService.updateMachine(machine.id, data)
+            // Update existing VPN server
+            VpnServerService.updateVpnServer(vpnServer.id, data)
                 .then(response => {
                     setSubmitted(true);
                     setError(null);
-                    if (onMachineUpdated) {
-                        onMachineUpdated(response.data);
+                    if (onVpnServerUpdated) {
+                        onVpnServerUpdated(response.data);
                     }
                     setTimeout(() => setSubmitted(false), 3000);
                 })
                 .catch(err => {
-                    console.error("Error updating machine:", err);
-                    setError("Failed to update machine. Please try again.");
+                    console.error("Error updating VPN server:", err);
+                    setError("Failed to update VPN server. Please try again.");
                 })
                 .finally(() => {
                     setIsSubmitting(false);
                 });
         } else {
-            // Create new machine
-            MachineService.createMachine(data)
+            // Create new VPN server
+            VpnServerService.createVpnServer(data)
                 .then(response => {
-                    setMachine(initialMachineState);
+                    setVpnServer(initialVpnServerState);
                     setSubmitted(true);
                     setError(null);
-                    if (onMachineAdded) {
-                        onMachineAdded(response.data);
+                    if (onVpnServerAdded) {
+                        onVpnServerAdded(response.data);
                     }
                     setTimeout(() => setSubmitted(false), 3000);
                 })
@@ -85,7 +81,7 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
     };
 
     const resetForm = () => {
-        setMachine(initialMachineState);
+        setVpnServer(initialVpnServerState);
         setSubmitted(false);
         setError(null);
     };
@@ -104,7 +100,7 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
                         </div>
                         <div className="ml-3">
                             <h3 className="text-sm font-medium text-green-800">
-                                {isEditMode ? 'Machine updated successfully!' : 'Machine added successfully!'}
+                                {isEditMode ? 'VPN server updated successfully!' : 'VPN server added successfully!'}
                             </h3>
                         </div>
                     </div>
@@ -112,7 +108,7 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
             ) : (
                 <div>
                     <h3 className="text-xl font-semibold leading-6 text-gray-900 mb-6 pb-2 border-b border-gray-200">
-                        {isEditMode ? 'Edit Machine' : 'Add New Machine'}
+                        {isEditMode ? 'Edit VPN Server' : 'Add New VPN Server'}
                     </h3>
 
                     {error && (
@@ -134,88 +130,55 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
 
                     <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-6">
                         <div className="sm:col-span-3">
-                            <label htmlFor="equipmentName" className="block text-sm font-medium text-gray-700 mb-1">
-                                Equipment Name<span className="text-red-500">*</span>
+                            <label htmlFor="vpnName" className="block text-sm font-medium text-gray-700 mb-1">
+                                VPN Name<span className="text-red-500">*</span>
                             </label>
                             <div className="mt-1">
                                 <input
                                     type="text"
-                                    id="equipmentName"
-                                    name="equipmentName"
+                                    id="vpnName"
+                                    name="vpnName"
                                     required
-                                    value={machine.equipmentName}
+                                    value={vpnServer.vpnName}
                                     onChange={handleInputChange}
-                                    placeholder="Enter equipment name"
+                                    placeholder="Enter VPN name"
                                     className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
                                 />
                             </div>
                         </div>
 
                         <div className="sm:col-span-3">
-                            <label htmlFor="equipmentType" className="block text-sm font-medium text-gray-700 mb-1">
-                                Equipment Type<span className="text-red-500">*</span>
+                            <label htmlFor="serverAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                                Server Address<span className="text-red-500">*</span>
                             </label>
                             <div className="mt-1">
                                 <input
                                     type="text"
-                                    id="equipmentType"
-                                    name="equipmentType"
+                                    id="serverAddress"
+                                    name="serverAddress"
                                     required
-                                    value={machine.equipmentType}
+                                    value={vpnServer.serverAddress}
                                     onChange={handleInputChange}
-                                    placeholder="Enter equipment type"
+                                    placeholder="Enter server address"
                                     className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
                                 />
                             </div>
                         </div>
 
-                        <div className="sm:col-span-3">
-                            <label htmlFor="serialNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                                Serial Number<span className="text-red-500">*</span>
+                        <div className="sm:col-span-6">
+                            <label htmlFor="destinationNetwork"
+                                   className="block text-sm font-medium text-gray-700 mb-1">
+                                Destination Network<span className="text-red-500">*</span>
                             </label>
                             <div className="mt-1">
                                 <input
                                     type="text"
-                                    id="serialNumber"
-                                    name="serialNumber"
+                                    id="destinationNetwork"
+                                    name="destinationNetwork"
                                     required
-                                    value={machine.serialNumber}
+                                    value={vpnServer.destinationNetwork}
                                     onChange={handleInputChange}
-                                    placeholder="Enter serial number"
-                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="internalFactory" className="block text-sm font-medium text-gray-700 mb-1">
-                                Internal Factory
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    type="number"
-                                    id="internalFactory"
-                                    name="internalFactory"
-                                    value={machine.internalFactory}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter internal factory number"
-                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="sm:col-span-3">
-                            <label htmlFor="hostname" className="block text-sm font-medium text-gray-700 mb-1">
-                                Hostname
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    type="text"
-                                    id="hostname"
-                                    name="hostname"
-                                    value={machine.hostname}
-                                    onChange={handleInputChange}
-                                    placeholder="Enter hostname"
+                                    placeholder="Enter destination network"
                                     className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
                                 />
                             </div>
@@ -233,11 +196,11 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
                             </button>
                             <button
                                 type="button"
-                                onClick={saveMachine}
+                                onClick={saveVpnServer}
                                 disabled={isSubmitting}
                                 className={`ml-3 inline-flex justify-center py-2.5 px-5 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white 
-                                    ${isSubmitting ? 'bg-primary-400' : 'bg-primary-600 hover:bg-primary-700'} 
-                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200`}
+                                ${isSubmitting ? 'bg-primary-400' : 'bg-primary-600 hover:bg-primary-700'} 
+                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200`}
                             >
                                 {isSubmitting ? (
                                     <>
@@ -250,7 +213,7 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
                                         </svg>
                                         Saving...
                                     </>
-                                ) : isEditMode ? 'Update Machine' : 'Add Machine'}
+                                ) : isEditMode ? 'Update VPN Server' : 'Add VPN Server'}
                             </button>
                         </div>
                     </div>
@@ -260,4 +223,4 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
     );
 };
 
-export default AddMachineForm;
+export default AddVpnServerForm;

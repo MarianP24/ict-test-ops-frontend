@@ -1,62 +1,60 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import MachineService from '../../services/MachineService';
+import React, { useState, useEffect, useCallback } from 'react';
+import VpnServerService from '../../services/VpnServerService';
 
-// Machine-specific components
+// Vpn Server-specific components
 import {
-    AddMachineForm,
-    MachineTable,
-    FixturesModal,
+    AddVpnServerForm,
+    VpnServerTable,
     DeleteModal
-} from './machineComponents';
+} from './vpnServerComponents';
 
 // Shared utility components
 import {
     LoadingTableErrorMessage,
     AddEditModal,
     AddNewButton,
-    TableFilterBar, DownloadButton
+    TableFilterBar,
+    DownloadButton
 } from '../common/sharedComponents';
 
-const MachineList = () => {
-    // 1. All state declarations
-    const [machines, setMachines] = useState([]);
+const VpnServerList = () => {
+    // 1. State declarations
+    const [vpnServers, setVpnServers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isFiltering, setIsFiltering] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
-    const [editingMachine, setEditingMachine] = useState(null);
+    const [editingVpnServer, setEditingVpnServer] = useState(null);
     const [filters, setFilters] = useState({
-        equipmentName: '',
-        internalFactory: '',
-        serialNumber: '',
-        equipmentType: '',
-        hostname: ''
+        vpnName: '',
+        serverAddress: '',
+        destinationNetwork: '',
     });
-    const [filteredMachines, setFilteredMachines] = useState([]);
-    const [showFixturesModal, setShowFixturesModal] = useState(false);
-    const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
-    const [selectedMachineName, setSelectedMachineName] = useState('');
+    const [filteredVpnServers, setFilteredVpnServers] = useState([]);
+    const [showConnectedMachinesModal, setShowConnectedMachinesModal] = useState(false);
+    const [selectedVpnServerMachines, setSelectedVpnServerMachines] = useState([]);
+    const [selectedVpnServerName, setSelectedVpnServerName] = useState('');
 
-    // 2. All function declarations
-    const fetchMachines = useCallback(() => {
-        console.log('Attempting to fetch machines...');
+    // 2. Function declarations
+    const fetchVpnServers = useCallback(() => {
+        console.log('Attempting to fetch VPN servers...');
         setLoading(true);
         setError(null);
         const controller = new AbortController();
         const signal = controller.signal;
 
-        MachineService.getAllMachines(signal)
+        VpnServerService.getAllVpnServers(signal)
             .then(response => {
                 if (signal.aborted) return;
-                console.log('Machines fetched successfully:', response.data);
-                setMachines(response.data);
-                setFilteredMachines(response.data);
+                console.log('VPN servers fetched successfully:', response.data);
+                setVpnServers(response.data);
+                setFilteredVpnServers(response.data);
                 setLoading(false);
             })
             .catch(error => {
                 if (signal.aborted) return;
-                console.error('Error fetching machines:', error);
+                console.error('Error fetching VPN servers:', error);
                 if (error.response) {
                     console.error('Response data:', error.response.data);
                     console.error('Response status:', error.response.status);
@@ -65,7 +63,7 @@ const MachineList = () => {
                 } else {
                     console.error('Error message:', error.message);
                 }
-                setError('Failed to fetch machines. Your session may have expired. Please log in again.');
+                setError('Failed to fetch VPN servers. Your session may have expired. Please log in again.');
                 setLoading(false);
             });
 
@@ -74,14 +72,14 @@ const MachineList = () => {
     const applyFilters = useCallback((filterValues) => {
         setLoading(true);
 
-        MachineService.getMachinesByFilters(filterValues)
+        VpnServerService.getVpnServersByFilters(filterValues)
             .then(response => {
-                console.log('Filtered machines fetched successfully:', response.data);
-                setFilteredMachines(response.data);
+                console.log('Filtered VPN servers fetched successfully:', response.data);
+                setFilteredVpnServers(response.data);
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching filtered machines:', error);
+                console.error('Error fetching filtered VPN servers:', error);
                 if (error.response) {
                     console.error('Response data:', error.response.data);
                     console.error('Response status:', error.response.status);
@@ -96,82 +94,74 @@ const MachineList = () => {
     }, []);
 
     // 2.1 Modal control functions
-    const handleViewFixtures = useCallback((machine) => {
+    const handleViewMachines = useCallback((vpnServer) => {
         setLoading(true);
-        setSelectedMachineName(machine.equipmentName || `Machine ${machine.id}`);
+        setSelectedVpnServerName(vpnServer.vpnName || `VPN Server ${vpnServer.id}`);
 
-        MachineService.getMachineFixtures(machine.id)
+        VpnServerService.getVpnServerMachines(vpnServer.id)
             .then(response => {
-                console.log('Fixtures fetched successfully:', response.data);
-                setSelectedMachineFixtures(response.data);
-                setShowFixturesModal(true);
+                setSelectedVpnServerMachines(response.data);
                 setLoading(false);
+                setShowConnectedMachinesModal(true);
             })
             .catch(error => {
-                console.error('Error fetching fixtures:', error);
-                setError('Failed to fetch fixtures. Please try again later.');
+                console.error('Error fetching connected machines:', error);
+                setError('Failed to fetch connected machines. Please try again.');
                 setLoading(false);
             });
     }, []);
-    const handleCloseFixturesModal = () => {
-        setShowFixturesModal(false);
-    };
     const toggleAddForm = () => {
-        setEditingMachine(null);
+        setEditingVpnServer(null);
         setShowAddForm(!showAddForm);
     };
     const filterColumns = [
-        {key: 'equipmentName', label: 'Equipment Name'},
-        {key: 'internalFactory', label: 'Internal Factory'},
-        {key: 'serialNumber', label: 'Serial Number'},
-        {key: 'equipmentType', label: 'Equipment Type'},
-        {key: 'hostname', label: 'Hostname'}
+        {key: 'vpnName', label: 'VPN Name'},
+        {key: 'serverAddress', label: 'Server Address'},
+        {key: 'destinationNetwork', label: 'Destination Network'},
     ];
 
-
     // 2.2 CRUD operation functions
-    const handleMachineAdded = (newMachine) => {
-        setMachines([...machines, newMachine]);
-        fetchMachines();
+    const handleVpnServerAdded = (newVpnServer) => {
+        setVpnServers([...vpnServers, newVpnServer]);
+        fetchVpnServers();
         setShowAddForm(false); // close the form after adding
     };
-    const handleMachineUpdated = (updatedMachine) => {
-        setMachines(machines.map(machine => machine.id === updatedMachine.id ? updatedMachine : machine));
-        fetchMachines();
+    const handleVpnServerUpdated = (updatedVpnServer) => {
+        setVpnServers(vpnServers.map(vpnServer => vpnServer.id === updatedVpnServer.id ? updatedVpnServer : vpnServer));
+        fetchVpnServers();
         setShowAddForm(false); // close the form after updating
-        setEditingMachine(null);
+        setEditingVpnServer(null);
     };
     const handleDelete = (id) => {
         setDeleteConfirm(id);
     };
     const confirmDelete = () => {
-        if (deleteConfirm) {
-            setError(null);
-            MachineService.deleteMachine(deleteConfirm)
-                .then(() => {
-                    setMachines(machines.filter(machine => machine.id !== deleteConfirm));
-                    setFilteredMachines(filteredMachines.filter(machine => machine.id !== deleteConfirm));
-                    setDeleteConfirm(null);
-                })
-                .catch(err => {
-                    console.error("Error deleting machine:", err);
-                    setError("Failed to delete machine. Please try again.");
-                    setDeleteConfirm(null);
-                });
-        }
+        if (!deleteConfirm) return;
+
+        setLoading(true);
+        VpnServerService.deleteVpnServer(deleteConfirm)
+            .then(() => {
+                fetchVpnServers();
+                setDeleteConfirm(null);
+            })
+            .catch(error => {
+                console.error('Error deleting VPN server:', error);
+                setError('Failed to delete VPN server. Please try again later.');
+                setLoading(false);
+            });
     };
     const cancelDelete = () => {
         setDeleteConfirm(null);
     };
-    const handleEdit = (machine) => {
-        setEditingMachine({...machine});
+    const handleEdit = (vpnServer) => {
+        setEditingVpnServer(vpnServer);
         setShowAddForm(true);
-    }
-    const convertMachinesToCSV = (machines) => {
-        if (!machines || machines.length === 0) return '';
+    };
+    const convertVpnServersToCSV = (vpnServers) => {
+        if (!vpnServers || vpnServers.length === 0) return '';
 
         // Define custom headers with the display ID
-        const headers = ['displayId', ...Object.keys(machines[0]).filter(key =>
+        const headers = ['displayId', ...Object.keys(vpnServers[0]).filter(key =>
             !['__v', 'createdAt', 'updatedAt', 'id'].includes(key)
         )];
 
@@ -188,8 +178,8 @@ const MachineList = () => {
         const rows = [headerLabels.join(',')];
 
         // Add data rows
-        for (let i = 0; i < machines.length; i++) {
-            const machine = machines[i];
+        for (let i = 0; i < vpnServers.length; i++) {
+            const vpnServer = vpnServers[i];
             const values = headers.map(header => {
                 // For the displayId, use sequential numbering just like in the table
                 if (header === 'displayId') {
@@ -197,7 +187,7 @@ const MachineList = () => {
                 }
 
                 // Get the value, handling null/undefined
-                let value = machine[header];
+                let value = vpnServer[header];
 
                 // Convert null/undefined to empty string
                 if (value === null || value === undefined) {
@@ -232,7 +222,7 @@ const MachineList = () => {
     };
     const handleDownloadFilteredData = () => {
         // Early return if no data to download
-        if (filteredMachines.length === 0) {
+        if (filteredVpnServers.length === 0) {
             // You could add a toast notification here if you have a notification system
             console.warn("No data available to export");
             return;
@@ -240,7 +230,7 @@ const MachineList = () => {
 
         try {
             // Convert data to CSV
-            const csvData = convertMachinesToCSV(filteredMachines);
+            const csvData = convertVpnServersToCSV(filteredVpnServers);
 
             // Create a Blob containing the CSV data with UTF-8 BOM for Excel compatibility
             // The \ufeff is a UTF-8 BOM (Byte Order Mark) that helps Excel recognize the CSV as UTF-8
@@ -252,7 +242,7 @@ const MachineList = () => {
 
             // Set up the filename with date for better organization
             const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-            let filename = `machines`;
+            let filename = `vpn_servers`;
 
             // Add filter indication if filters are applied
             if (isFiltering) {
@@ -290,10 +280,10 @@ const MachineList = () => {
         }
     };
 
-    // 3. useEffect hooks
+    // 3. Use effects
     useEffect(() => {
-        fetchMachines();
-    }, [fetchMachines]);
+        fetchVpnServers();
+    }, [fetchVpnServers]);
 
     if (loading) {
         return (
@@ -302,7 +292,7 @@ const MachineList = () => {
                     <div
                         className="h-12 w-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
                 </div>
-                <h3 className="ml-3 text-xl font-medium text-gray-700">Loading machines...</h3>
+                <h3 className="ml-3 text-xl font-medium text-gray-700">Loading VPN Servers...</h3>
             </div>
         );
     }
@@ -310,16 +300,17 @@ const MachineList = () => {
     if (error) {
         return <LoadingTableErrorMessage
             message={error}
-            onRetry={fetchMachines}
+            onRetry={fetchVpnServers()}
         />;
     }
 
+    // 4. Component rendering
     return (
         <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 mt-8"> {/* Main container */}
             <div className="max-w-6xl mx-auto"> {/* Table width */}
 
                 <div className="page-header mb-2">{/* Header section */}
-                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Machine Management System</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">VPN Server Management System</h1>
                 </div>
 
                 <div
@@ -341,7 +332,7 @@ const MachineList = () => {
                             />
 
                             <AddNewButton
-                                label="Add New Machine"
+                                label="Add New VPN Server"
                                 onClick={toggleAddForm}
                             />
                         </div>
@@ -349,42 +340,35 @@ const MachineList = () => {
                 </div>
 
                 <div className="page-content mb-8">
-                    <MachineTable
-                        filteredMachines={filteredMachines}
+                    <VpnServerTable
+                        filteredVpnServers={filteredVpnServers}
                         isFiltering={isFiltering}
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
-                        handleViewFixtures={handleViewFixtures}
+                        handleViewMachines={handleViewMachines}
                     />
                 </div>
 
                 {/* Modals */}
                 <AddEditModal isOpen={showAddForm} onClose={toggleAddForm}>
-                    <AddMachineForm
-                        onMachineAdded={handleMachineAdded}
-                        onMachineUpdated={handleMachineUpdated}
-                        editMachine={editingMachine}
+                    <AddVpnServerForm
+                        onVpnServerAdded={handleVpnServerAdded}
+                        onVpnServerUpdated={handleVpnServerUpdated}
+                        editVpnServer={editingVpnServer}
                         onCancel={toggleAddForm}
                     />
                 </AddEditModal>
-
-                <FixturesModal
-                    isOpen={showFixturesModal}
-                    onClose={handleCloseFixturesModal}
-                    fixtures={selectedMachineFixtures}
-                    machineName={selectedMachineName}
-                />
 
                 <DeleteModal
                     isOpen={deleteConfirm !== null}
                     onDelete={confirmDelete}
                     onCancel={cancelDelete}
-                    title="Delete Machine"
-                    message="Are you sure you want to delete this machine? This action cannot be undone."
+                    title="Delete VPN Server"
+                    message="Are you sure you want to delete this server? This action cannot be undone."
                 />
             </div>
         </div>
     );
 };
 
-export default MachineList;
+export default VpnServerList;
