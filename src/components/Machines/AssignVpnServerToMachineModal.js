@@ -87,8 +87,10 @@ const AssignVpnServerToMachineModal = ({machine, isOpen, onClose, onAssign}) => 
             MachineService.removeVpnServer(machine.id)
                 .then(response => {
                     setSubmitted(true);
-                    if (onAssign) onAssign(); // Call callback function with no params
-                    setTimeout(() => setSubmitted(false), 3000);
+                    setTimeout(() => {
+                        if (onAssign) onAssign();
+                    }, 2000);
+
                 })
                 .catch(err => {
                     console.error("Error removing VPN server from machine:", err);
@@ -104,8 +106,9 @@ const AssignVpnServerToMachineModal = ({machine, isOpen, onClose, onAssign}) => 
             MachineService.assignVpnServer(machine.id, selectedVpnServerId)
                 .then(response => {
                     setSubmitted(true);
-                    if (onAssign) onAssign(); // Call callback function with no params
-                    setTimeout(() => setSubmitted(false), 3000);
+                    setTimeout(() => {
+                        if (onAssign) onAssign();
+                    }, 2000);
                 })
                 .catch(err => {
                     console.error("Error assigning VPN server to machine:", err);

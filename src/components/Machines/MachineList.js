@@ -151,12 +151,7 @@ const MachineList = () => {
     };
     const handleVpnServerAssignment = () => {
         console.log('VPN server assignment completed successfully');
-        // Close the modal after a short delay to show the success message
-        setTimeout(() => {
-            setShowAssignVpnModal(false);
-        }, 2000);
-
-        fetchMachines();
+        setShowAssignVpnModal(false);
         return {success: true};
     };
 
