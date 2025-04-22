@@ -66,57 +66,6 @@ const AssignVpnServerToMachineModal = ({machine, isOpen, onClose, onAssign}) => 
         return () => controller.abort();
     };
 
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //
-    //     if (!removeMode && !selectedVpnServerId) {
-    //         setError("Please select a VPN server");
-    //         return;
-    //     }
-    //
-    //     if (!machine || !machine.id || machine.id === 'undefined') {
-    //         setError("Invalid machine selected. Please try again.");
-    //         return;
-    //     }
-    //
-    //     setIsSubmitting(true);
-    //     setSubmitted(false);
-    //     setSubmissionError(false);
-    //
-    //     if (removeMode) {
-    //         MachineService.removeVpnServer(machine.id)
-    //             .then(response => {
-    //                 setSubmitted(true);
-    //                 if (onAssign) onAssign();
-    //                 setTimeout(() => setSubmitted(false), 3000);
-    //             })
-    //             .catch(err => {
-    //                 console.error("Error removing VPN server from machine:", err);
-    //                 setSubmissionError(true);
-    //                 setTimeout(() => setSubmissionError(false), 3000);
-    //             })
-    //             .finally(() => {
-    //                 setIsSubmitting(false);
-    //             });
-    //     } else {
-    //         MachineService.assignVpnServer(machine.id, selectedVpnServerId)
-    //             .then(response => {
-    //                 setSubmitted(true);
-    //                 if (onAssign) onAssign();
-    //                 setTimeout(() => setSubmitted(false), 3000);
-    //             })
-    //             .catch(err => {
-    //                 console.error("Error assigning VPN server to machine:", err);
-    //                 setSubmissionError(true);
-    //                 setTimeout(() => setSubmissionError(false), 3000);
-    //             })
-    //             .finally(() => {
-    //                 setIsSubmitting(false);
-    //             });
-    //     }
-    // };
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
