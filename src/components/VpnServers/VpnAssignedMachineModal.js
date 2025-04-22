@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const VpnAssignedMachineModal = ({ isOpen, onClose, machines, vpnServerName, maxWidth = "sm:max-w-2xl" }) => {
     if (!isOpen) return null;
@@ -38,7 +39,7 @@ const VpnAssignedMachineModal = ({ isOpen, onClose, machines, vpnServerName, max
                                     <tr className="bg-gray-100">
                                         <th className="py-2 px-4 text-center">Equipment Name</th>
                                         <th className="py-2 px-4 text-center">Equipment Type</th>
-                                        <th className="py-2 px-4 text-center">Location</th>
+                                        <th className="py-2 px-4 text-center">Internal Factory</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -46,7 +47,7 @@ const VpnAssignedMachineModal = ({ isOpen, onClose, machines, vpnServerName, max
                                         <tr key={machine.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                             <td className="py-2 px-4 text-center">{machine.equipmentName}</td>
                                             <td className="py-2 px-4 text-center">{machine.equipmentType || '-'}</td>
-                                            <td className="py-2 px-4 text-center">{machine.location || '-'}</td>
+                                            <td className="py-2 px-4 text-center">{machine.internalFactory || '-'}</td>
                                         </tr>
                                     ))}
                                     </tbody>
@@ -72,5 +73,29 @@ const VpnAssignedMachineModal = ({ isOpen, onClose, machines, vpnServerName, max
         </div>
     );
 };
+
+VpnAssignedMachineModal.propTypes = {
+    // Required props
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    machines: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+            equipmentName: PropTypes.string.isRequired,
+            equipmentType: PropTypes.string,
+            internalFactory: PropTypes.string
+        })
+    ).isRequired,
+    vpnServerName: PropTypes.string.isRequired,
+
+    // Optional props with defaults
+    maxWidth: PropTypes.string
+};
+
+// Default props
+VpnAssignedMachineModal.defaultProps = {
+    maxWidth: "sm:max-w-2xl"
+};
+
 
 export default VpnAssignedMachineModal;

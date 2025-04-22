@@ -44,10 +44,6 @@ const VpnServerTable = ({
                             Destination Network
                         </th>
                         <th scope="col"
-                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
-                            Connected Machines
-                        </th>
-                        <th scope="col"
                             className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
                             Actions
                         </th>
@@ -66,9 +62,6 @@ const VpnServerTable = ({
                                     <td className="py-2 text-sm text-center text-gray-700">{vpnServer.vpnName}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{vpnServer.serverAddress}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{vpnServer.destinationNetwork}</td>
-                                    <td className="py-2 text-sm text-center text-gray-700">
-                                        {vpnServer.machines ? vpnServer.machines.length : 0}
-                                    </td>
                                     <td className="py-2 text-center text-sm font-medium">
 
                                         <EditButton
