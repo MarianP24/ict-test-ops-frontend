@@ -5,7 +5,8 @@ import VpnServerService from '../../services/VpnServerService';
 import {
     AddVpnServerForm,
     VpnServerTable,
-    DeleteModal
+    DeleteModal,
+    VpnAssignedMachineModal
 } from './vpnServerComponents';
 
 // Shared utility components
@@ -100,9 +101,10 @@ const VpnServerList = () => {
 
         VpnServerService.getVpnServerMachines(vpnServer.id)
             .then(response => {
+                console.log('Connected machines fetched successfully:', response.data);
                 setSelectedVpnServerMachines(response.data);
-                setLoading(false);
                 setShowConnectedMachinesModal(true);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching connected machines:', error);
@@ -365,6 +367,13 @@ const VpnServerList = () => {
                     onCancel={cancelDelete}
                     title="Delete VPN Server"
                     message="Are you sure you want to delete this server? This action cannot be undone."
+                />
+                
+                <VpnAssignedMachineModal 
+                    isOpen={showConnectedMachinesModal}
+                    onClose={() => setShowConnectedMachinesModal(false)}
+                    machines={selectedVpnServerMachines}
+                    vpnServerName={selectedVpnServerName}
                 />
             </div>
         </div>

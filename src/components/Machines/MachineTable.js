@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Pagination from '../common/Pagination';
 import PropTypes from 'prop-types';
-import {EditButton, DeleteButton} from '../common/sharedComponents';
+import {EditButton, DeleteButton, AssignButton} from '../common/sharedComponents';
 
 
 const MachineTable = ({
@@ -9,7 +9,8 @@ const MachineTable = ({
                           isFiltering,
                           handleEdit,
                           handleDelete,
-                          handleViewFixtures
+                          handleViewFixtures,
+                          handleAssignVpnServer
                       }) => {
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -86,6 +87,11 @@ const MachineTable = ({
                                             title="Delete machine"
                                             onClick={() => handleDelete(machine.id)}
                                         />
+
+                                        <AssignButton
+                                            title="Assign VPN Server"
+                                            onClick={() => handleAssignVpnServer(machine)}
+                                        />
                                     </td>
                                 </tr>
                             );
@@ -137,7 +143,8 @@ MachineTable.propTypes = {
     isFiltering: PropTypes.bool.isRequired,
     handleEdit: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
-    handleViewFixtures: PropTypes.func.isRequired
+    handleViewFixtures: PropTypes.func.isRequired,
+    handleAssignVpnServer: PropTypes.func.isRequired
 };
 
 export default MachineTable;

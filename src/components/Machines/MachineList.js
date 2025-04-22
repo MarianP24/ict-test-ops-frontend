@@ -6,7 +6,8 @@ import {
     AddMachineForm,
     MachineTable,
     FixturesModal,
-    DeleteModal
+    DeleteModal,
+    AssignVpnServerToMachineModal
 } from './machineComponents';
 
 // Shared utility components
@@ -16,6 +17,7 @@ import {
     AddNewButton,
     TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
+import {AssignFixtureToMachineModal} from "../Fixtures/fixtureComponents";
 
 const MachineList = () => {
     // 1. All state declarations
@@ -37,6 +39,8 @@ const MachineList = () => {
     const [showFixturesModal, setShowFixturesModal] = useState(false);
     const [selectedMachineFixtures, setSelectedMachineFixtures] = useState([]);
     const [selectedMachineName, setSelectedMachineName] = useState('');
+    const [showAssignVpnModal, setShowAssignVpnModal] = useState(false);
+    const [selectedMachine, setSelectedMachine] = useState(null);
 
     // 2. All function declarations
     const fetchMachines = useCallback(() => {
@@ -141,6 +145,45 @@ const MachineList = () => {
         setShowAddForm(false); // close the form after updating
         setEditingMachine(null);
     };
+    const handleAssignVpnServer = (machine) => {
+        console.log('Selected machine for VPN assignment:', machine);
+        // Ensure we have a valid machine with a valid ID
+        if (!machine || !machine.id) {
+            console.error('Cannot assign VPN server to invalid machine:', machine);
+            return;
+        }
+        setSelectedMachine(machine);
+        setShowAssignVpnModal(true);
+    };
+    // const handleVpnServerAssignment = (machineId, vpnServerId) => {
+    //     return MachineService.assignVpnServer(machineId, vpnServerId)
+    //         .then(() => {
+    //             // Close the modal after a short delay to show the success message
+    //             setTimeout(() => {
+    //                 setShowAssignVpnModal(false);
+    //             }, 2000);
+    //
+    //             return {success: true};
+    //         })
+    //         .catch(error => {
+    //             console.error('Error assigning VPN server:', error);
+    //             // Re-throw the error so it can be caught by the modal's error handler
+    //             throw error;
+    //         });
+    // };
+
+    const handleVpnServerAssignment = () => {
+        console.log('VPN server assignment completed successfully');
+        // Close the modal after a short delay to show the success message
+        setTimeout(() => {
+            setShowAssignVpnModal(false);
+        }, 2000);
+
+        fetchMachines();
+        return {success: true};
+    };
+
+
     const handleDelete = (id) => {
         setDeleteConfirm(id);
     };
@@ -355,6 +398,7 @@ const MachineList = () => {
                         handleEdit={handleEdit}
                         handleDelete={handleDelete}
                         handleViewFixtures={handleViewFixtures}
+                        handleAssignVpnServer={handleAssignVpnServer}
                     />
                 </div>
 
@@ -381,6 +425,13 @@ const MachineList = () => {
                     onCancel={cancelDelete}
                     title="Delete Machine"
                     message="Are you sure you want to delete this machine? This action cannot be undone."
+                />
+
+                <AssignVpnServerToMachineModal
+                    machine={selectedMachine}
+                    isOpen={showAssignVpnModal}
+                    onClose={() => setShowAssignVpnModal(false)}
+                    onAssign={handleVpnServerAssignment}
                 />
             </div>
         </div>
