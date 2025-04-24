@@ -79,28 +79,30 @@ const SiteMap = () => {
 
         // Right side areas (4 areas)
         areaR1: [
-            {id: 'itemR1-1', label: 'Station 1', x: 20, y: 15},
+            {id: 'itemR1-1', label: 'Knor Aeroflex', x: 80, y: 45},
+            {id: 'itemR1-1', label: 'Knor Seica', x: 60, y: 45},
         ],
         areaR2: [
-            {id: 'itemR2-1', label: 'Station 2', x: 20, y: 15},
         ],
         areaR3: [
-            {id: 'itemR3-1', label: 'Station 3', x: 20, y: 15},
         ],
         areaR4: [
-            {id: 'itemR4-1', label: 'Station 4', x: 20, y: 15},
+            {id: 'itemR4-1', label: 'EVSV ICT', x: 50, y:30},
+            {id: 'itemR4-1', label: 'EVSV Flashing', x: 50, y:70},
         ],
 
         // External areas
         area5: [
-            {id: 'item5-1', label: 'Lab 1', x: 20, y: 15},
-            {id: 'item5-2', label: 'Lab 2', x: 20, y: 60},
-            {id: 'item5-3', label: 'Lab 3', x: 70, y: 40},
+            {id: 'item5-1', label: 'NEXTEER ICT1', x: 60, y: 20},
+            {id: 'item5-2', label: 'NEXTEER ICT2', x: 60, y: 50},
+            {id: 'item5-3', label: 'NEXTEER Flashing', x: 25, y: 80},
         ],
         area6: [
-            {id: 'item6-1', label: 'Workshop 1', x: 20, y: 20},
-            {id: 'item6-2', label: 'Workshop 2', x: 100, y: 20},
-            {id: 'item6-3', label: 'Workshop 3', x: 60, y: 70},
+            {id: 'item6-1', label: 'MIX ICT1', x: 67, y: 95},
+            {id: 'item6-2', label: 'MIX ICT3', x: 42, y: 75},
+            {id: 'item6-3', label: 'MIX ICT4', x: 42, y: 47},
+            {id: 'item6-2', label: 'Flashing 1', x: 70, y: 2},
+            {id: 'item6-3', label: 'Flashing 2', x: 70, y: 30},
         ],
     });
 
@@ -203,7 +205,7 @@ const SiteMap = () => {
                     <div
                         className="absolute left-0 top-[73%] w-[180px] h-[150px] bg-red-50 border border-red-200 rounded-l shadow-md transform -translate-x-[190px]">
                         <div className="font-medium text-red-800 p-20px bg-red-100 rounded text-left text-sm inline-block">
-                            Area 5 - Lab
+                            Area 5 - NEXTEER
                         </div>
 
                         {/* Extended corridor connecting Area 5 to the main building */}
@@ -211,13 +213,13 @@ const SiteMap = () => {
                              style={{right: '-60px'}}></div>
 
                         {/* Movable items in Area 5 */}
-                        <div className="relative h-[calc(100%-1.75rem)] p-2">
+                        <div className="relative h-[calc(100%-1.75rem)]">
                             {movableItems.area5.map(item => (
                                 <div
                                     key={item.id}
                                     className="absolute bg-red-200 rounded p-1 shadow-sm text-xs text-center cursor-move hover:shadow-md transition-shadow"
                                     style={{
-                                        top: `min(calc(100% - ${itemSizes.area5.height}px), max(0%, ${item.y}%))`,
+                                        top: `calc(${item.y}% - ${item.y >= 0 ? '1.5rem' : '0px'})`,
                                         left: `min(calc(100% - ${itemSizes.area5.width}px), max(0%, ${item.x}%))`,
                                         width: `${itemSizes.area5.width}px`,
                                         height: `${itemSizes.area5.height}px`,
@@ -244,13 +246,13 @@ const SiteMap = () => {
                             className="absolute top-0 left-1/2 h-[30px] w-[250px] bg-gray-300 z-10 transform -translate-x-1/2 -translate-y-[30px]"></div>
 
                         {/* Movable items in Area 6 */}
-                        <div className="relative h-[calc(100%-1.75rem)] p-2">
+                        <div className="relative h-[calc(100%-1.75rem)]">
                             {movableItems.area6.map(item => (
                                 <div
                                     key={item.id}
                                     className="absolute bg-indigo-200 rounded p-1 shadow-sm text-xs text-center cursor-move hover:shadow-md transition-shadow"
                                     style={{
-                                        top: `min(calc(100% - ${itemSizes.area6.height}px), max(0%, ${item.y}%))`,
+                                        top: `calc(${item.y}% - ${item.y >= 0 ? '1.5rem' : '0px'})`,
                                         left: `min(calc(100% - ${itemSizes.area6.width}px), max(0%, ${item.x}%))`,
                                         width: `${itemSizes.area6.width}px`,
                                         height: `${itemSizes.area6.height}px`,
