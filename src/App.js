@@ -14,6 +14,7 @@ import ApplicationPage from "./components/Application/ApplicationPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VpnServerList from "./components/VpnServers/VpnServerList";
+import SiteMap from "./components/SiteMap/SiteMap";
 
 function App() {
   return (
@@ -70,6 +71,13 @@ function App() {
                 <>
                   <Navbar />
                   <ApplicationPage />
+                </>
+              } />
+
+              <Route path="/site-map" element={
+                <>
+                  <Navbar />
+                  <SiteMap />
                 </>
               } />
 
