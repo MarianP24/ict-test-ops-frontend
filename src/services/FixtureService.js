@@ -26,6 +26,10 @@ class FixtureService {
         return api.post(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, {}, { signal });
     }
 
+    removeFixtureFromSpecificMachine(fixtureId, machineId, signal) {
+        return api.delete(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, { signal });
+    }
+
     createMaintenanceFixtureReport(signal) {
         return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, { signal });
     }

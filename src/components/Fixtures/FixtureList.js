@@ -147,6 +147,24 @@ const FixtureList = () => {
                 throw error;
             });
     };
+    const handleRemoveFixture = (fixtureId, machineId) => {
+        return FixtureService.removeFixtureFromSpecificMachine(fixtureId, machineId)
+            .then(() => {
+                toast.success('Fixture removed from machine successfully');
+
+                // Close the modal after a short delay
+                setTimeout(() => {
+                    setShowAssignModal(false);
+                }, 2000);
+
+                return {success: true};
+            })
+            .catch(error => {
+                console.error('Error removing fixture:', error);
+                // Re-throw the error so it can be caught by the modal's error handler
+                throw error;
+            });
+    };
     const handleGenerateMaintenanceReport = (fixtureId) => {
         setLoading(true);
 
@@ -491,6 +509,7 @@ const FixtureList = () => {
                     isOpen={showAssignModal}
                     onClose={() => setShowAssignModal(false)}
                     onAssign={handleAssignFixture}
+                    onRemove={handleRemoveFixture}
                 />
 
                 <FixtureAssignedMachinesModal
