@@ -69,6 +69,18 @@ class FixtureService {
             signal
         });
     }
+
+    connectVnc(hostname, signal) {
+        return api.post(`${index.api.endpoints.fixtures}/vnc/${hostname}`, {}, { signal });
+    }
+
+    connectToCDrive(hostname, signal) {
+        return api.post(`${index.api.endpoints.fixtures}/connect-c-drive/${hostname}`, {}, { signal });
+    }
+
+    connectToDDrive(hostname, signal) {
+        return api.post(`${index.api.endpoints.fixtures}/connect-d-drive/${hostname}`, {}, { signal });
+    }
 }
 
 export default new FixtureService();
