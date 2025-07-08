@@ -56,6 +56,10 @@ const MachineTable = ({
                             Hostname
                         </th>
                         <th scope="col"
+                            className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                            Username
+                        </th>
+                        <th scope="col"
                             className="px-2 py-3 text-center text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
                             Actions
                         </th>
@@ -76,6 +80,7 @@ const MachineTable = ({
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.serialNumber}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.equipmentType}</td>
                                     <td className="py-2 text-sm text-center text-gray-700">{machine.hostname}</td>
+                                    <td className="py-2 text-sm text-center text-gray-700">{machine.machineUsername}</td>
                                     <td className="py-2 text-center text-sm font-medium">
 
                                         <EditButton
@@ -137,7 +142,8 @@ MachineTable.propTypes = {
             internalFactory: PropTypes.string.isRequired,
             serialNumber: PropTypes.string.isRequired,
             equipmentType: PropTypes.string.isRequired,
-            hostname: PropTypes.string.isRequired
+            hostname: PropTypes.string.isRequired,
+            machineUsername: PropTypes.string.isRequired
         })
     ).isRequired,
     isFiltering: PropTypes.bool.isRequired,

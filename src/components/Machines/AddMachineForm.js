@@ -7,7 +7,8 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
         internalFactory: '',
         serialNumber: '',
         equipmentType: '',
-        hostname: ''
+        hostname: '',
+        machineUsername: ''
     }), []);
 
     const [machine, setMachine] = useState(initialMachineState);
@@ -45,7 +46,8 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
             internalFactory: parseInt(machine.internalFactory) || 0,
             serialNumber: machine.serialNumber,
             equipmentType: machine.equipmentType,
-            hostname: machine.hostname
+            hostname: machine.hostname,
+            machineUsername: machine.machineUsername
         };
 
         if (isEditMode) {
@@ -216,6 +218,22 @@ const AddMachineForm = ({onMachineAdded, onMachineUpdated, editMachine}) => {
                                     value={machine.hostname}
                                     onChange={handleInputChange}
                                     placeholder="Enter hostname"
+                                    className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
+                                />
+                            </div>
+                        </div>
+                        <div className="sm:col-span-3">
+                            <label htmlFor="machineUsername" className="block text-sm font-medium text-gray-700 mb-1">
+                                Username
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    type="text"
+                                    id="machineUsername"
+                                    name="machineUsername"
+                                    value={machine.machineUsername}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter Username"
                                     className="shadow-sm bg-gray-50 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-0 border-b-2 border-gray-200 focus:border-primary-500 rounded-lg px-3 py-2.5 transition-all duration-200"
                                 />
                             </div>
