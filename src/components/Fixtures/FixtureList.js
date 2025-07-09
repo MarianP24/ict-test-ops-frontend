@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback} from 'react';
 import FixtureService from '../../services/FixtureService';
 import FixtureAssignedMachinesModal from "./FixtureAssignedMachineModal";
 import {toast} from "react-toastify";
+import useLongRunningOperation from "../common/hooks/useLongRunningOperation";
 
 // Fixture specific components
 import {
@@ -20,12 +21,10 @@ import {
     TableFilterBar, DownloadButton
 } from '../common/sharedComponents';
 
-
-
 const FixtureList = () => {
     // 1. All state declarations
     const [fixtures, setFixtures] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isFiltering, setIsFiltering] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -47,12 +46,12 @@ const FixtureList = () => {
     const [showMachinesModal, setShowMachinesModal] = useState(false);
     const [selectedFixtureMachines, setSelectedFixtureMachines] = useState([]);
     const [selectedFixtureName, setSelectedFixtureName] = useState('');
+    const { execute: executeMaintenanceReport} = useLongRunningOperation(60000); // 60 seconds timeout for maintenance operations
 
 
     // 2. All function declarations
     const fetchFixtures = useCallback(() => {
         console.log('Attempting to fetch fixtures...');
-        setLoading(true);
         setError(null);
         const controller = new AbortController();
         const signal = controller.signal;
@@ -63,7 +62,6 @@ const FixtureList = () => {
                 console.log('Fixtures fetched successfully:', response.data);
                 setFixtures(response.data);
                 setFilteredFixtures(response.data);
-                setLoading(false);
             })
             .catch(error => {
                 if (signal.aborted) return;
@@ -77,19 +75,18 @@ const FixtureList = () => {
                     console.error('Error message:', error.message);
                 }
                 setError('Failed to fetch fixtures. Your session may have expired. Please log in again.');
-                setLoading(false);
             });
 
         return () => controller.abort();
     }, []);
     const applyFilters = useCallback((filterValues) => {
-        setLoading(true);
+        // setLoading(true);
 
         FixtureService.getFixturesByFilters(filterValues)
             .then(response => {
                 console.log('Filtered fixtures fetched successfully:', response.data);
                 setFilteredFixtures(response.data);
-                setLoading(false);
+                // setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching filtered fixtures:', error);
@@ -102,7 +99,7 @@ const FixtureList = () => {
                     console.error('Error message:', error.message);
                 }
                 setError('Failed to apply filters. Please try again later.');
-                setLoading(false);
+                // setLoading(false);
             });
     }, []);
 
@@ -165,23 +162,28 @@ const FixtureList = () => {
                 throw error;
             });
     };
-    const handleGenerateMaintenanceReport = (fixtureId) => {
-        setLoading(true);
-
-        FixtureService.createMaintenanceReportForSingleFixture(fixtureId)
-            .then(response => {
-                toast.success('Maintenance report generated successfully');
-                fetchFixtures();
-            })
-            .catch(error => {
-                console.error('Error generating maintenance report:', error);
-                toast.error(`Failed to generate maintenance report: ${error.response?.data || error.message}`);
-                setLoading(false);
-            });
+    const handleGenerateMaintenanceReport = async (fixtureId) => {
+        try {
+            await executeMaintenanceReport(
+                (signal, axiosTimeout) => FixtureService.createMaintenanceReportForSingleFixture(fixtureId, signal, axiosTimeout),
+                {
+                    loadingMessage: 'Generating maintenance report... This may take up to 60 seconds for VPN-connected machines.',
+                    successMessage: 'Maintenance report generated successfully!',
+                    timeoutMessage: 'Request timed out after 60 seconds. The report may still be processing in the background.',
+                    errorMessage: (error) => `Failed to generate maintenance report: ${error.response?.data || error.message}`,
+                    onSuccess: () => {
+                        fetchFixtures();
+                    }
+                }
+            );
+        } catch (error) {
+            console.error('Error generating maintenance report:', error);
+        }
     };
 
+
     const handleViewMachines = useCallback((fixture) => {
-        setLoading(true);
+        // setLoading(true);
         setSelectedFixtureName(fixture.programName || `Fixture ${fixture.id}`);
 
         FixtureService.getFixtureMachineMap(fixture.id)
@@ -189,12 +191,12 @@ const FixtureList = () => {
                 console.log('Machines fetched successfully:', response.data);
                 setSelectedFixtureMachines(response.data);
                 setShowMachinesModal(true);
-                setLoading(false);
+                // setLoading(false);
             })
             .catch(error => {
                 console.error('Error fetching machines:', error);
                 setError('Failed to fetch machines. Please try again later.');
-                setLoading(false);
+                // setLoading(false);
             });
     }, []);
 
@@ -405,17 +407,17 @@ const FixtureList = () => {
         setFilteredFixtures(applySort(fixtures));
     }, [sortField, sortDirection, fixtures]);
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-pulse">
-                    <div
-                        className="h-12 w-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <h3 className="ml-3 text-xl font-medium text-gray-700">Loading fixtures...</h3>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="flex justify-center items-center min-h-screen">
+    //             <div className="animate-pulse">
+    //                 <div
+    //                     className="h-12 w-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+    //             </div>
+    //             <h3 className="ml-3 text-xl font-medium text-gray-700">Loading fixtures...</h3>
+    //         </div>
+    //     );
+    // }
 
     if (error) {
         return <LoadingTableErrorMessage

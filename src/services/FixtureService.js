@@ -34,8 +34,11 @@ class FixtureService {
         return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, { signal });
     }
 
-    createMaintenanceReportForSingleFixture(fixtureId, signal) {
-        return api.post(`${index.api.endpoints.fixtures}/maintenance/${fixtureId}`, {}, { signal });
+    createMaintenanceReportForSingleFixture(fixtureId, signal, customTimeout = 65000) {
+        return api.post(`${index.api.endpoints.fixtures}/maintenance/${fixtureId}`, {}, {
+            signal,
+            timeout: customTimeout  // Override the global timeout - 65 seconds for VPN operations
+        });
     }
 
     getFixtureMachineMap(id, signal) {
@@ -83,4 +86,5 @@ class FixtureService {
     }
 }
 
-export default new FixtureService();
+const fixtureService = new FixtureService();
+export default fixtureService;
