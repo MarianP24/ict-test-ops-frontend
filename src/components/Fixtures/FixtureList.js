@@ -242,18 +242,23 @@ const FixtureList = () => {
         setEditingFixture({...fixture});
         setShowAddForm(true);
     };
-    const handleCreateMaintenanceReport = () => {
-        FixtureService.createMaintenanceFixtureReport()
-            .then(() => {
-                // Handle success
-                alert("Maintenance report created successfully");
-                // Optionally refresh the fixtures list
-                fetchFixtures();
-            })
-            .catch(error => {
-                console.error("Error creating maintenance report:", error);
-                setError("Failed to create maintenance report. Please try again.");
-            });
+    const handleCreateMaintenanceReport = async () => {
+        try {
+            await executeMaintenanceReport(
+                (signal, axiosTimeout) => FixtureService.createMaintenanceFixtureReport(signal, axiosTimeout),
+                {
+                    loadingMessage: 'Creating maintenance report for all fixtures... This may take up to 60 seconds for VPN-connected machines.',
+                    successMessage: 'Maintenance report created successfully!',
+                    timeoutMessage: 'Request timed out after 60 seconds. The report may still be processing in the background.',
+                    errorMessage: (error) => `Failed to create maintenance report: ${error.response?.data || error.message}`,
+                    onSuccess: () => {
+                        fetchFixtures();
+                    }
+                }
+            );
+        } catch (error) {
+            console.error('Error creating maintenance report:', error);
+        }
     };
     const handleDownloadFilteredData = () => {
         // Early return if no data to download
@@ -406,18 +411,6 @@ const FixtureList = () => {
 
         setFilteredFixtures(applySort(fixtures));
     }, [sortField, sortDirection, fixtures]);
-
-    // if (loading) {
-    //     return (
-    //         <div className="flex justify-center items-center min-h-screen">
-    //             <div className="animate-pulse">
-    //                 <div
-    //                     className="h-12 w-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-    //             </div>
-    //             <h3 className="ml-3 text-xl font-medium text-gray-700">Loading fixtures...</h3>
-    //         </div>
-    //     );
-    // }
 
     if (error) {
         return <LoadingTableErrorMessage

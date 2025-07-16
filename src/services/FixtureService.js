@@ -30,8 +30,11 @@ class FixtureService {
         return api.delete(`${index.api.endpoints.fixtures}/${fixtureId}/machines/${machineId}`, { signal });
     }
 
-    createMaintenanceFixtureReport(signal) {
-        return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, { signal });
+    createMaintenanceFixtureReport(signal, customTimeout = 65000) {
+        return api.post(`${index.api.endpoints.fixtures}/maintenance`, {}, {
+            signal,
+            timeout: customTimeout  // Override the global timeout - 65 seconds for VPN operations
+        });
     }
 
     createMaintenanceReportForSingleFixture(fixtureId, signal, customTimeout = 65000) {
