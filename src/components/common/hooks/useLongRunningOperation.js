@@ -1,8 +1,26 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { toast } from 'react-toastify';
 
 const useLongRunningOperation = (timeoutMs = 25000) => {
     const [isLoading, setIsLoading] = useState(false);
+    const abortControllerRef = useRef(null);
+    const loadingToastRef = useRef(null);
+
+    const cleanup = useCallback(() => {
+        // Cleanup abort controller
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+
+        // Cleanup loading toast
+        if (loadingToastRef.current) {
+            toast.dismiss(loadingToastRef.current);
+            loadingToastRef.current = null;
+        }
+
+        setIsLoading(false);
+    }, []);
 
     const execute = useCallback(async (operation, options = {}) => {
         const {
@@ -15,47 +33,77 @@ const useLongRunningOperation = (timeoutMs = 25000) => {
             onFinally
         } = options;
 
+        // Prevent multiple concurrent operations
+        if (isLoading) {
+            console.warn('Operation already in progress');
+            return;
+        }
+
+        // Cleanup any previous operation
+        cleanup();
+
         setIsLoading(true);
 
+        // Create new abort controller
+        abortControllerRef.current = new AbortController();
+        const signal = abortControllerRef.current.signal;
+
         // Show loading toast
-        const loadingToast = toast.info(loadingMessage, {
+        loadingToastRef.current = toast.info(loadingMessage, {
             autoClose: false,
             closeButton: false
         });
 
         try {
-            // Create abort controller
-            const controller = new AbortController();
-            const signal = controller.signal;
-
-            // Create a timeout promise with enhanced error info
+            // Create a timeout promise
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     console.warn(`Operation timed out after ${timeoutMs}ms`);
-                    controller.abort();
+                    if (abortControllerRef.current) {
+                        abortControllerRef.current.abort();
+                    }
                     reject(new Error('TIMEOUT'));
                 }, timeoutMs);
+
+                // Cleanup timeout if operation completes
+                signal.addEventListener('abort', () => {
+                    clearTimeout(timeoutId);
+                });
             });
 
             // Race between the operation and timeout
-            const axiosTimeout = timeoutMs + 5000;
-            console.log(`Starting long-running operation - Frontend timeout: ${timeoutMs}ms, Axios timeout: ${axiosTimeout}ms`);
-            
+            const axiosTimeout = Math.min(timeoutMs + 5000, 60000); // Cap at 60s
+            console.log(`Starting operation - Frontend timeout: ${timeoutMs}ms, Axios timeout: ${axiosTimeout}ms`);
+
             const result = await Promise.race([
-                operation(signal, axiosTimeout), // Give axios slightly more time
+                operation(signal, axiosTimeout),
                 timeoutPromise
             ]);
 
-            toast.dismiss(loadingToast);
+            // Success cleanup
+            if (loadingToastRef.current) {
+                toast.dismiss(loadingToastRef.current);
+                loadingToastRef.current = null;
+            }
+
             toast.success(successMessage);
 
             if (onSuccess) onSuccess(result);
             return result;
 
         } catch (error) {
-            toast.dismiss(loadingToast);
+            // Error cleanup
+            if (loadingToastRef.current) {
+                toast.dismiss(loadingToastRef.current);
+                loadingToastRef.current = null;
+            }
 
-            // Enhanced error checking for timeout scenarios
+            // Skip error handling if operation was aborted (component unmounted)
+            if (signal.aborted && error.name === 'AbortError') {
+                return;
+            }
+
+            // Enhanced error checking
             const isTimeoutError = error.message === 'TIMEOUT' ||
                 error.code === 'ECONNABORTED' ||
                 error.name === 'AbortError' ||
@@ -65,7 +113,6 @@ const useLongRunningOperation = (timeoutMs = 25000) => {
             if (isTimeoutError) {
                 toast.warning(timeoutMessage);
             } else {
-                // Log the actual error for debugging
                 console.error('Long running operation error:', {
                     message: error.message,
                     code: error.code,
@@ -74,7 +121,10 @@ const useLongRunningOperation = (timeoutMs = 25000) => {
                     status: error.response?.status
                 });
 
-                toast.error(typeof errorMessage === 'function' ? errorMessage(error) : errorMessage);
+                const finalErrorMessage = typeof errorMessage === 'function'
+                    ? errorMessage(error)
+                    : errorMessage;
+                toast.error(finalErrorMessage);
             }
 
             if (onError) onError(error);
@@ -82,11 +132,22 @@ const useLongRunningOperation = (timeoutMs = 25000) => {
 
         } finally {
             setIsLoading(false);
+            abortControllerRef.current = null;
+
             if (onFinally) onFinally();
         }
-    }, [timeoutMs]);
+    }, [timeoutMs, isLoading, cleanup]);
 
-    return { execute, isLoading };
+    // Cleanup effect for component unmounting
+    const cancel = useCallback(() => {
+        cleanup();
+    }, [cleanup]);
+
+    return {
+        execute,
+        isLoading,
+        cancel // Allow manual cancellation
+    };
 };
 
 export default useLongRunningOperation;
