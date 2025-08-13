@@ -184,14 +184,17 @@ const MachineList = () => {
     const convertMachinesToCSV = (machines) => {
         if (!machines || machines.length === 0) return '';
 
-        // Define custom headers with the display ID
+        // Define custom headers with the display ID, excluding vpnServer field and replacing with vpnServerName
         const headers = ['displayId', ...Object.keys(machines[0]).filter(key =>
-            !['__v', 'createdAt', 'updatedAt', 'id'].includes(key)
-        )];
+            !['__v', 'createdAt', 'updatedAt', 'id', 'vpnServer'].includes(key)
+        ), 'vpnServerName', 'vpnServerAddress', 'vpnDestinationNetwork'];
 
         // Create user-friendly header labels
         const headerLabels = headers.map(header => {
             if (header === 'displayId') return 'ID';
+            if (header === 'vpnServerName') return 'Vpn Server';
+            if (header === 'vpnServerAddress') return 'Server Address';
+            if (header === 'vpnDestinationNetwork') return 'Destination Network';
             // Convert camelCase to Title Case with spaces
             return header
                 .replace(/([A-Z])/g, ' $1') // Add space before capital letters
@@ -208,6 +211,17 @@ const MachineList = () => {
                 // For the displayId, use sequential numbering just like in the table
                 if (header === 'displayId') {
                     return i + 1; // Start from 1
+                }
+
+                // Handle VPN server name specifically
+                if (header === 'vpnServerName') {
+                    return machine.vpnServer?.vpnName || '';
+                }
+                if (header === 'vpnServerAddress') {
+                    return machine.vpnServer?.serverAddress || '';
+                }
+                if (header === 'vpnDestinationNetwork') {
+                    return machine.vpnServer?.destinationNetwork || '';
                 }
 
                 // Get the value, handling null/undefined
